@@ -1,0 +1,13 @@
+display_library: sdl2
+
+# ROM and VGA BIOS images ---------------------------------------------
+ 
+# boot from floppy using our disk image -------------------------------
+ 
+floppya: 1_44="/home/tuhdo/workspace/study/os/disk.dsk", status=inserted  # Boot from drive A
+ 
+# logging and reporting -----------------------------------------------
+ 
+log:         OSDev.log             # All errors and info logs will output to OSDev.log
+error:       action=report 
+info:        action=report
