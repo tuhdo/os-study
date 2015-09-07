@@ -1,7 +1,10 @@
-all: boot1.bin boot.dsk
+all: boot_loader.bin boot.dsk
 
-boot1.bin: boot1.asm
-	nasm -f bin boot1.asm -o boot1.bin
+boot_loader.bin: boot_loader.asm
+	nasm -f bin boot_loader.asm -o boot_loader.bin
 
 boot.dsk:
-	dd if=boot1.bin of=disk.dsk bs=512 count=2
+	dd if=boot_loader.bin of=disk.dsk bs=512 count=2
+
+clean:
+	rm -rf boot_loader.bin desk.dsk
