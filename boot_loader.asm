@@ -25,26 +25,27 @@ bpbOEM			db "My OS   "				; This member must be exactally 8 bytes. It is just
 								; the name of your OS :) Everything else remains the same.
 
 bpbBytesPerSector:  	DW 512
-bpbSectorsPerCluster: 	DB 1
+bpbSectorsPerCluster: DB 1
 bpbReservedSectors: 	DW 1
 bpbNumberOfFATs: 	    DB 2
 bpbRootEntries: 	    DW 224
 bpbTotalSectors: 	    DW 2880
-bpbMedia: 	            DB 0xF0
-bpbSectorsPerFAT: 	    DW 9
+bpbMedia: 	          DB 0xF0
+bpbSectorsPerFAT: 	  DW 9
 bpbSectorsPerTrack: 	DW 18
 bpbHeadsPerCylinder: 	DW 2
-bpbHiddenSectors: 	    DD 0
-bpbTotalSectorsBig:     DD 0
-bsDriveNumber: 	        DB 0
-bsUnused: 	            DB 0
+bpbHiddenSectors: 	  DD 0
+bpbTotalSectorsBig:   DD 0
+bsDriveNumber: 	      DB 0
+bsUnused: 	          DB 0
 bsExtBootSignature: 	DB 0x29
-bsSerialNumber:	        DD 0xa0a1a2a3
-bsVolumeLabel: 	        DB "MOS FLOPPY "
-bsFileSystem: 	        DB "FAT12   "
+bsSerialNumber:	      DD 0xa0a1a2a3
+bsVolumeLabel: 	      DB "MOS FLOPPY "
+bsFileSystem: 	      DB "FAT12   "
 
 msg	db	"Welcome to My Operating System!", 0ah, 0dh, 0h		; the string to print
-msg2 db "Hello World!", 0
+msg2 db "Hello World!",	0ah, 0dh, 0h
+read_fat_msg db "Reading FAT", 	0ah, 0dh, 0h
 
 ;***************************************
 ;	Prints a string
@@ -67,32 +68,32 @@ PrintDone:
 ;*************************************************;
 
 loader:
-
 	xor	ax, ax		; Setup segments to insure they are 0. Remember that
 	mov	ds, ax		; we have ORG 0x7c00. This means all addresses are based
 	mov	es, ax		; from 0x7c00:0. Because the data segments are within the same
                 ; ; code segment, null em.
 
-	mov	si, msg						; our message to print
-	call	Print						; call our print function
+	mov		ah, 0					; reset floppy disk function
+	mov		dl, 0					; drive 0 is floppy drive
+	int		0x13					; call BIOS
+	jc		loader					; If Carry Flag (CF) is set, there was an error. Try resetting again
 
-	mov	si, msg2						; our message to print
-	call	Print						; call our print function
+	mov		ax, 0x1000				; we are going to read sector to into address 0x1000:0
+	mov		es, ax
+	xor		bx, bx
 
-	xor	ax, ax					; clear ax
-	int	0x12						; get the amount of KB from the BIOS
+  mov		ah, 0x02			; read floppy sector function
+	mov		al, 1					; read 1 sector
+	mov		ch, 0					; we are reading the second sector past us, so its still on track 0
+	mov		cl, 2					; sector to read (The second sector)
+	mov		dh, 0					; head number
+	mov		dl, 0					; drive number. Remember Drive 0 is floppy drive.
+	int		0x13					; call BIOS - Read the sector
 
-  shl ax, 1
-  mov si, ax
-  call Print
+	mov si, read_fat_msg
+	call Print
 
-	mov ah, 0bh
-  mov bh, 00h
-	mov bl, 0ffh
-	int 0x10
-
-	;; mov si, ($ - $$)
-  ;; call Print
+  jmp		0x1000:0x0				; jump to execute the sector!
 
 	cli							; Clear all Interrupts
 	hlt							; halt the system
