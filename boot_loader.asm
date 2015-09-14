@@ -44,7 +44,7 @@ bsVolumeLabel: 	      DB "MOS FLOPPY "
 bsFileSystem: 	      DB "FAT12   "
 
 _CurX db 20
-_CurY db 20
+_CurY db 15
 
 %define VIDMEM        0xB8000
 %define COLS          80
@@ -184,13 +184,13 @@ loader:
 	; mov es, ax
 	; mov byte [es:0], 'z'
 
-	mov bl, 'Z'
-  call Putch32
+	; mov bl, 'Z'
+  ; call Putch32
 
-  ; jmp		0x1000:0x0				; jump to execute the sector!
+  jmp		0x1000:0x0				; jump to execute the sector!
 
-	cli							; Clear all Interrupts
-	hlt							; halt the system
+	; cli							; Clear all Interrupts
+	; hlt							; halt the system
 
 	times 510 - ($-$$) db 0					; We have to be 512 bytes. Clear the rest of the bytes with 0
                                   ; $ - $$ means calculating the space used between current address and

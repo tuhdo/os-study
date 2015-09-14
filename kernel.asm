@@ -1,15 +1,14 @@
 bits 32
 
-  _CurX db 0
-  _CurY db 0
-
-jmp start
+_CurX db 10
+_CurY db 17
 
 %define VIDMEM        0xB8000
 %define COLS          80
 %define LINES         25
-%define CHAR_ATTRIB   14
+%define CHAR_ATTRIB   12
 
+jmp start
   ;**************************************************;
   ;	Putch32 ()
   ;		- Prints a character to screen
@@ -66,7 +65,11 @@ Putch32:
   ;-------------------------------;
   mov	dl, bl			; Get character
   mov	dh, CHAR_ATTRIB		; the character attribute
-  mov	word [edi], dx		; write to video display
+  push eax
+  mov eax, 0xB8000
+  mov es, ax
+  pop ecx
+  mov word [eax], dx		; write to video display
 
   ;-------------------------------;
   ;   Update next position        ;
@@ -94,13 +97,13 @@ Putch32:
 start:
   ; Print green background
 
-  mov ah, 0bh
-  mov bh, 00h
-  mov bl, 0ffh
-  int 0x10
+  ; mov ah, 0bh
+  ; mov bh, 00h
+  ; mov bl, 0ffh
+  ; int 0x10
 
-  mov bl, 0x65
+	mov bl, 'D'
   call Putch32
 
-cli							; Clear all Interrupts
-hlt							; halt the system
+  cli							; Clear all Interrupts
+  hlt							; halt the system
