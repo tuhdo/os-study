@@ -165,7 +165,7 @@ loader:
 	int		0x13					; call BIOS
 	jc		loader					; If Carry Flag (CF) is set, there was an error. Try resetting again
 
-	mov		ax, 0x1000				; we are going to read sector to into address 0x1000:0
+	mov		ax, 0x50				; we are going to read sector to into address 0x50:0
 	mov		es, ax
 	xor		bx, bx
 
@@ -187,7 +187,7 @@ loader:
 	; mov bl, 'Z'
   ; call Putch32
 
-  jmp		0x1000:0x0				; jump to execute the sector!
+  jmp		0x50:0x0				; jump to execute the sector!
 
 	; cli							; Clear all Interrupts
 	; hlt							; halt the system
