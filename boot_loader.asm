@@ -165,7 +165,12 @@ loader:
 	int		0x13					; call BIOS
 	jc		loader					; If Carry Flag (CF) is set, there was an error. Try resetting again
 
-	mov		ax, 0x50				; we are going to read sector to into address 0x50:0
+  ; we are going to read sector to into address 0x50:0
+  ; do not read the sector that exceeds beyond the address
+  ; 0x10000, since we are in 16 bit mode, the data beyond won't be
+  ; accessible and is wrapped around when we try to address them i.e.
+  ; if we try to access 0x10047, it becomes 0x47.
+	mov		ax, 0x50
 	mov		es, ax
 	xor		bx, bx
 
