@@ -13,6 +13,7 @@ jmp	main				; go to start
 
 %include "stdio.inc"			; basic i/o routines
 %include "gdt.inc"			; Gdt routines
+%include "a20.inc"
 
 ;*******************************************************
 ;	Data Section
@@ -58,6 +59,12 @@ main:
 	call	Puts16
 
 	;-------------------------------;
+	;   Enable A20			;
+	;-------------------------------;
+
+	call	EnableA20_KKbrd_Out
+
+	;-------------------------------;
 	;   Install our GDT		;
 	;-------------------------------;
 
@@ -84,7 +91,6 @@ main:
 bits 32					; Welcome to the 32 bit world!
 
 Stage3:
-
 	;-------------------------------;
 	;   Set registers		;
 	;-------------------------------;
@@ -94,6 +100,7 @@ Stage3:
 	mov		ss, ax
 	mov		es, ax
 	mov		esp, 90000h		; stack begins from 90000h
+	mov   edi, 0xFFFFFFFF 				; test 32 bit
 
 ;*******************************************************
 ;	Stop execution
