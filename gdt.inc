@@ -50,6 +50,9 @@ gdt_data:
 
 end_of_gdt:
 toc:
+  ; according to lgdt description, the instruction accepts a 6-bytes
+  ; operand, with the lowest 2 bytes size of GDT, and the remaining
+  ; 4 bytes the base address of GDT
 	dw end_of_gdt - gdt_data - 1 	; limit (Size of GDT)
 	dd gdt_data 			; base of GDT
 
