@@ -90,6 +90,8 @@ main:
 
 bits 32					; Welcome to the 32 bit world!
 
+%include "stdio32.inc"
+
 Stage3:
 	;-------------------------------;
 	;   Set registers		;
@@ -101,6 +103,9 @@ Stage3:
 	mov		es, ax
 	mov		esp, 90000h		; stack begins from 90000h
 	mov   edi, 0xFFFFFFFF 				; test 32 bit
+
+	mov bl, 'D'
+  call Putch32
 
 ;*******************************************************
 ;	Stop execution
