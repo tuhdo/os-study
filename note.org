@@ -1,0 +1,64 @@
+* Tools: Build and install Bochs
+** bochs
+** bochsdbg
+* Bootloader
+** General algorithm
+- Before booting: write the bootloader to MBR (first 512 bytes). The bootloader
+  must fill 512 bytes entirely, with the last 2 bytes a device signature i.e. a
+  flobby disk signature 0xAA55.
+
+- When computer starts:
+  + Load first 512 bytes (MBR) and execute code in there.
+  + Clear segment registers.
+  + Print some text (optinal).
+  + Load more code in futher sectors of the disk to execute.
+** How to create a virtual flobby disk
+Using dd.
+** How to write a binary file to first sector (MBR)
+Using dd.
+** How to write to any sector
+Using dd with seek option.
+** Read a sector with BIOS interrupt and load it on an address
+Use BIOS routine for reading/writing disk sectors and load in a specific
+address. In real mode, we must not exceed 16 bits or else it will wrap around.
+* Rings
+** Switching rings
+* System architecture
+- All circuits are made either combination or sequential.
+- Programmers communicate with hardware through writing to ports (physical pins)
+  or writing to registers.
+- Controllers are just programmable hardware.
+** The 80x86 Registers
+*** Segment registers
+*** Index registers
+*** PC register
+*** Special purpose registers
+** System Orginazation
+- Von Neumann: data and instructions share memory. Instructions are a form of data.
+- The CPU communicates with the Memory Controller to retrieve data and instructions.
+** The System Bus
+*** Data bus
+*** Address bus
+*** Control bus
+** Real Mode Memory Map
+** How an instruction executes
+- Using the instruction register (also call Program Counter) to point to the
+  address of the next instruction.
+** Software Ports
+All I/O Ports are mapped to a given memory location. This allows us to use the
+*IN* and *OUT* instructions. I/O ports are just physical pins anyway.
+* Protected mode
+- Designed to increase the stability of the systems.
+- Has hardware support for Virtual Memory and Task State Switching (TSS)
+- Hardware support for interrupting programs and executing another
+- 4 Operating Modes: Ring 0, Ring 1, Ring 2, Ring 3
+- Access to 32 bit registers
+- Access to up to 4 GB of memory
+* A20 line
+- To maintain backward compatible with older x86 processor, A20 is disabled to
+  prevent accessing memory beyond 1MB, so the memory address can wrap around.
+  
+- For example, if we try to access address beyond 0x10000 in real mode, like
+  0x10047, the address becomes 0x00047 after we load it into a register.
+* Global Descriptor Table
+- Provide parameters for code/data segments i.e. where each segment starts.
