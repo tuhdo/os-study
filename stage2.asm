@@ -40,6 +40,11 @@ main:
   int 0x10
 
 	;-------------------------------;
+	;   Enable A20			;
+	;-------------------------------;
+	call	EnableA20_KKbrd_Out
+
+	;-------------------------------;
 	;   Setup segments and stack	;
 	;-------------------------------;
 	cli				; clear interrupts
@@ -57,12 +62,6 @@ main:
 	;-------------------------------;
   mov	si, LoadingMsg
 	call	Puts16
-
-	;-------------------------------;
-	;   Enable A20			;
-	;-------------------------------;
-
-	call	EnableA20_KKbrd_Out
 
 	;-------------------------------;
 	;   Install our GDT		;
@@ -88,9 +87,12 @@ main:
 ;	ENTRY POINT FOR STAGE 3
 ;******************************************************
 
-bits 32					; Welcome to the 32 bit world!
+bits 32
+	; Welcome to the 32 bit world!
 
 %include "stdio32.inc"
+
+WelcomeMsg db "Welcome to our operating system...", 0ah, 0h
 
 Stage3:
 	;-------------------------------;
@@ -104,8 +106,9 @@ Stage3:
 	mov		esp, 90000h		; stack begins from 90000h
 	mov   edi, 0xFFFFFFFF 				; test 32 bit
 
-	mov bl, 'D'
-  call Putch32
+	mov eax, WelcomeMsg
+	call Puts32
+
 
 ;*******************************************************
 ;	Stop execution
