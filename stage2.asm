@@ -14,6 +14,7 @@ jmp	main				; go to start
 %include "stdio.inc"			; basic i/o routines
 %include "gdt.inc"			; Gdt routines
 %include "a20.inc"
+%include "disk16.inc"
 
 ;*******************************************************
 ;	Data Section
@@ -38,11 +39,23 @@ main:
   ; mov bh, 00h
   ; mov bl, 0ffh
   ; int 0x10
-
+	
 	;-------------------------------;
 	;   Enable A20			;
 	;-------------------------------;
 	call	EnableA20_KKbrd_Out
+
+	mov	ax, 0x2000
+	mov	es, ax
+	xor		bx, bx
+
+  mov	num_of_sectors, 1					; read 1 sector
+	mov	track_num, 0					; we are reading the second sector past us, so its still on track 0
+	mov	sector_num, 3					; sector to read (The second sector)
+	mov	head_num, 0					; head number
+	mov	drive_num, 0					; drive number. Remember Drive 0 is floppy drive.
+  mov		ah, 0x02			; read floppy sector function
+	int		0x13					; call BIOS - Read the sector
 
 	;-------------------------------;
 	;   Setup segments and stack	;
@@ -111,6 +124,7 @@ Stage3:
 	mov eax, WelcomeMsg
 	call Puts32
 
+	; jmp 0x10000
 
 ;*******************************************************
 ;	Stop execution

@@ -55,6 +55,8 @@ msg	db	"Welcome to My Operating System!", 0ah, 0dh, 0h		; the string to print
 msg2 db "Hello World!",	0ah, 0dh, 0h
 read_fat_msg db "Reading FAT", 	0ah, 0dh, 0h
 
+%include "disk16.inc"
+
 ;***************************************
 ;	Prints a string
 ;	DS=>SI: 0 terminated string
@@ -174,16 +176,15 @@ loader:
 	mov		es, ax
 	xor		bx, bx
 
-  mov		ah, 0x02			; read floppy sector function
-	mov		al, 1					; read 1 sector
-	mov		ch, 0					; we are reading the second sector past us, so its still on track 0
-	mov		cl, 2					; sector to read (The second sector)
-	mov		dh, 0					; head number
-	mov		dl, 0					; drive number. Remember Drive 0 is floppy drive.
-	int		0x13					; call BIOS - Read the sector
-
 	mov si, read_fat_msg
 	call Print
+
+  mov	num_of_sectors, 1					; read 1 sector
+	mov	track_num, 0					; we are reading the second sector past us, so its still on track 0
+	mov	sector_num, 2					; sector to read (The second sector)
+	mov	head_num, 0					; head number
+	mov	drive_num, 0					; drive number. Remember Drive 0 is floppy drive.
+  call read_sector
 
 	; mov ax, 0xB800
 	; mov es, ax

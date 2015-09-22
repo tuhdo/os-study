@@ -1,109 +1,45 @@
+org 0x10000
+
 bits 32
 
-_CurX db 10
-_CurY db 17
+jmp Stage3
+; Print green background
 
-%define VIDMEM        0xB8000
-%define COLS          80
-%define LINES         25
-%define CHAR_ATTRIB   12
+; mov ah, 0bh
+; mov bh, 00h
+; mov bl, 0ffh
+; int 0x10
 
-jmp start
-  ;**************************************************;
-  ;	Putch32 ()
-  ;		- Prints a character to screen
-  ;	BL => Character to print
-  ;**************************************************;
+;******************************************************
+;	ENTRY POINT FOR STAGE 3
+;******************************************************
+	; Welcome to the 32 bit world!
 
-Putch32:
-  pusha				; save registers
-  mov	edi, VIDMEM		; get pointer to video memory
+%include "stdio32.inc"
 
-  ;-------------------------------;
-  ;   Get current position	;
-  ;-------------------------------;
-  xor	eax, eax		; clear eax
+WelcomeMsg db "Welcome to Tu's Operating System", 0ah, 0h
 
-  ;--------------------------------
-  ; Remember: currentPos = x + y * COLS! x and y are in _CurX and _CurY.
-  ; Because there are two bytes per character, COLS=number of characters in a line.
-  ; We have to multiply this by 2 to get number of bytes per line. This is the screen width,
-  ; so multiply screen with * _CurY to get current line
-  ;--------------------------------
-  mov	ecx, COLS*2		; Mode 7 has 2 bytes per char, so its COLS*2 bytes per line
-  mov	al, byte [_CurY]	; get y pos
-  mul	ecx			; multiply y*COLS
-  push	eax			; save eax--the multiplication
-
-  ;--------------------------------
-  ; Now y * screen width is in eax. Now, just add _CurX. But, again remember that _CurX is relative
-  ; to the current character count, not byte count. Because there are two bytes per character, we
-  ; have to multiply _CurX by 2 first, then add it to our screen width * y.
-  ;--------------------------------
-  mov	al, byte [_CurX]	; multiply _CurX by 2 because it is 2 bytes per char
-  mov	cl, 2
-  mul	cl
-  pop	ecx			; pop y*COLS result
-  add	eax, ecx
-
-  ;-------------------------------
-  ; Now eax contains the offset address to draw the character at, so just add it to the base address
-  ; of video memory (Stored in edi)
-  ;-------------------------------
-  xor	ecx, ecx
-  add	edi, eax		; add it to the base address
-
-
-  ;-------------------------------;
-  ;   Watch for new line          ;
-  ;-------------------------------;
-  cmp	bl, 0x0A		; is it a newline character?
-  je	.Row			; yep--go to next row
-
-  ;-------------------------------;
-  ;   Print a character           ;
-  ;-------------------------------;
-  mov	dl, bl			; Get character
-  mov	dh, CHAR_ATTRIB		; the character attribute
-  push eax
-  mov eax, 0xB8000
-  mov es, ax
-  pop ecx
-  mov word [eax], dx		; write to video display
-
-  ;-------------------------------;
-  ;   Update next position        ;
-  ;-------------------------------;
-  inc	byte [_CurX]		; go to next character
-  cmp byte	[_CurX], COLS		; are we at the end of the line?
-  je	.Row			; yep-go to next row
-  jmp	.done			; nope, bail out
-
+Stage3:
+  hlt
 	;-------------------------------;
-	;   Go to next row              ;
+	;   Set registers		;
 	;-------------------------------;
-.Row:
-	mov	byte [_CurX], 0		; go back to col 0
-	inc	byte [_CurY]		; go to next row
+	mov		ax, 0x10		; set data segments to data selector (0x10)
+	mov		ds, ax
+	mov		ss, ax
+	mov		es, ax
+	mov		esp, 90000h		; stack begins from 90000h
+	mov   edi, 0xFFFFFFFF 				; test 32 bit
 
-	;-------------------------------;
-	;   Restore registers & return  ;
-	;-------------------------------;
+	call ClrScr32
+	mov eax, WelcomeMsg
+	call Puts32
+	cli
+  
+  ;*******************************************************
+  ;	Stop execution
+  ;*******************************************************
 
-.done:
-	popa				; restore registers and return
-	ret
-
-start:
-  ; Print green background
-
-  ; mov ah, 0bh
-  ; mov bh, 00h
-  ; mov bl, 0ffh
-  ; int 0x10
-
-	mov bl, 'D'
-  call Putch32
-
-  cli							; Clear all Interrupts
-  hlt							; halt the system
+STOP:
+	cli
+	hlt
