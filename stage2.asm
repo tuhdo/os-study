@@ -34,10 +34,10 @@ main:
 
   ; Print green background
 
-  mov ah, 0bh
-  mov bh, 00h
-  mov bl, 0ffh
-  int 0x10
+  ; mov ah, 0bh
+  ; mov bh, 00h
+  ; mov bl, 0ffh
+  ; int 0x10
 
 	;-------------------------------;
 	;   Enable A20			;
@@ -92,7 +92,7 @@ bits 32
 
 %include "stdio32.inc"
 
-WelcomeMsg db "Welcome to our operating system...", 0ah, 0h
+WelcomeMsg db "Welcome to Tu's Operating System", 0ah, 0h
 
 Stage3:
 	;-------------------------------;
@@ -105,6 +105,8 @@ Stage3:
 	mov		es, ax
 	mov		esp, 90000h		; stack begins from 90000h
 	mov   edi, 0xFFFFFFFF 				; test 32 bit
+
+	call ClrScr32
 
 	mov eax, WelcomeMsg
 	call Puts32

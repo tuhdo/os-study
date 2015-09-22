@@ -4,7 +4,7 @@ _CurY db 5
 %define VIDMEM        0xB8000
 %define COLS          80
 %define LINES         25
-%define CHAR_ATTRIB   12
+%define CHAR_ATTRIB   15
 
   ;**************************************************;
   ;	Putch32 ()
@@ -100,3 +100,74 @@ Puts32:
 .done_Puts32:
   popa
   ret
+
+;**************************************************;
+;	MoveCur ()
+;		- Update hardware cursor
+;	parm/ bh = Y pos
+;	parm/ bl = x pos
+;**************************************************;
+MovCur:
+ 	pusha				; save registers (aren't you getting tired of this comment?)
+ 	;-------------------------------;
+	;   Get current position        ;
+	;-------------------------------;
+ 	; Here, _CurX and _CurY are relitave to the current position on screen, not in memory.
+	; That is, we don't need to worry about the byte alignment we do when displaying characters,
+	; so just follow the forumla: location = _CurX + _CurY * COLS
+	xor	eax, eax
+	mov	ecx, COLS
+	mov	al, bh			; get y pos
+	mul	ecx			; multiply y*COLS
+	add	al, bl			; Now add x
+	mov	ebx, eax
+
+	;--------------------------------------;
+	;   Set low byte index to VGA register ;
+	;--------------------------------------;
+	mov	al, 0x0f		; Cursor location low byte index
+	mov	dx, 0x03D4		; Write it to the CRT index register
+	out	dx, al
+
+	mov	al, bl			; The current location is in EBX. BL contains the low byte, BH high byte
+	mov	dx, 0x03D5		; Write it to the data register
+	out	dx, al			; low byte
+
+	;---------------------------------------;
+	;   Set high byte index to VGA register ;
+	;---------------------------------------;
+	xor	eax, eax
+
+	mov	al, 0x0e		; Cursor location high byte index
+	mov	dx, 0x03D4		; Write to the CRT index register
+	out	dx, al
+
+	mov	al, bh			; the current location is in EBX. BL contains low byte, BH high byte
+	mov	dx, 0x03D5		; Write it to the data register
+	out	dx, al			; high byte
+
+	popa
+	ret
+
+;**************************************************;
+;	ClrScr32 ()
+;		- Clears screen
+;**************************************************;
+ClrScr32:
+	pusha
+	cld
+	mov	edi, VIDMEM
+	mov	cx, 2000
+	mov	ah, CHAR_ATTRIB
+	mov	al, ' '
+  ; rep to repeat an instruction CX times. stosw to store al to the address in
+  ; edi, then increment by one. the amount depends on which stos[b/w/d]
+  ; instruction is used. in this case, we use stosw because video memory include
+  ; 2 bytes: the first is character and the 2nd is the attrubte of that
+  ; character. We only want to modify the first byte every 2 bytes.
+	rep	stosw
+
+	mov	byte [_CurX], 20
+	mov	byte [_CurY], 5
+	popa
+	ret
