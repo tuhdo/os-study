@@ -27,7 +27,7 @@ address. In real mode, we must not exceed 16 bits or else it will wrap around.
 - All circuits are made either combination or sequential.
 - Programmers communicate with hardware through writing to ports (physical pins)
   or writing to registers.
-- Controllers are just programmable hardware.
+- Controllers are just programmable hardware. CPU is just another form of controller.
 ** The 80x86 Registers
 *** Segment registers
 *** Index registers
@@ -62,3 +62,4 @@ All I/O Ports are mapped to a given memory location. This allows us to use the
   0x10047, the address becomes 0x00047 after we load it into a register.
 * Global Descriptor Table
 - Provide parameters for code/data segments i.e. where each segment starts.
+* Basic VGA programming
