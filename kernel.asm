@@ -1,4 +1,4 @@
-org 0x10000
+org 0x1000
 
 bits 32
 
@@ -20,8 +20,7 @@ jmp Stage3
 WelcomeMsg db "Welcome to Tu's Operating System", 0ah, 0h
 
 Stage3:
-  hlt
-	;-------------------------------;
+  ;-------------------------------;
 	;   Set registers		;
 	;-------------------------------;
 	mov		ax, 0x10		; set data segments to data selector (0x10)
@@ -35,7 +34,7 @@ Stage3:
 	mov eax, WelcomeMsg
 	call Puts32
 	cli
-  
+
   ;*******************************************************
   ;	Stop execution
   ;*******************************************************

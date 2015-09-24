@@ -11,9 +11,4 @@
 read_sector:
   mov		ah, 0x02			; read floppy sector function
 	int		0x13					; call BIOS - Read the sector
-
-  mov ah, 0bh
-  mov bh, 00h
-  mov bl, 0ffh
-  int 0x10
   ret
