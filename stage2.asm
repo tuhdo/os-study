@@ -37,7 +37,8 @@ main:
 	;-------------------------------;
 	call	EnableA20_KKbrd_Out
 
-	mov	ax, 0x1001
+	; move kernel to address 0x10FF0
+	mov	ax, 0x10FF
 	mov	es, ax
 	xor	bx, bx
 
@@ -91,10 +92,10 @@ main:
   ; anymore and offset from the based address of the code selector. CPU will
   ; know how to resolve the address.
 	;
-	; In this case, we define that our code segment starts from 0x10010 (with a
-	; limit of 0xFFFF, so code segment only lasts upto 0x1FFFF) and we load the
-	; kernel at 0x10010, so the offset is 0x10.
-	jmp	08h:0x10
+	; In this case, we define that our code segment (and selector) starts from
+	; 0x10000 (with a limit of 0xFFFF, so code segment only lasts upto 0x1FFFF)
+	; and we load the kernel at 0x10FF0, so the offset is 0xFF0.
+	jmp	08h:0xFF0
 
 	; Note: Do NOT re-enable interrupts! Doing so will triple fault!
 	; We will fix this in Stage 3.

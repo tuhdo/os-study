@@ -1,4 +1,4 @@
-org 0x10010
+org 0x10FF0
 
 bits 32
 
