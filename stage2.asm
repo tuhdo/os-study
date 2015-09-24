@@ -37,7 +37,7 @@ main:
 	;-------------------------------;
 	call	EnableA20_KKbrd_Out
 
-	mov	ax, 0x100
+	mov	ax, 0x1001
 	mov	es, ax
 	xor	bx, bx
 
@@ -86,11 +86,15 @@ main:
 	mov	cr0, eax
 
 	; far jump to fix CS. Remember that the code selector is 0x8! My note: In
-  ; protected mode, we refer to a code segment based on the GDT defined earlier,
-  ; not absolute address anymore. In this case, we refer to code selector (which
-  ; is 0x8, 8 bytes away from the start of GDT) and offset from the based
-  ; address of the code selector. CPU will know how to resolve the address.
-	jmp	08h:0x1000
+  ; protected mode, we refer to a code segment based on the GDT defined earlier
+  ; (which is 0x8, 8 bytes away from the start of GDT), not absolute address
+  ; anymore and offset from the based address of the code selector. CPU will
+  ; know how to resolve the address.
+	;
+	; In this case, we define that our code segment starts from 0x10010 (with a
+	; limit of 0xFFFF, so code segment only lasts upto 0x1FFFF) and we load the
+	; kernel at 0x10010, so the offset is 0x10.
+	jmp	08h:0x10
 
 	; Note: Do NOT re-enable interrupts! Doing so will triple fault!
 	; We will fix this in Stage 3.
