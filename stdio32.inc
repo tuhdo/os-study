@@ -117,6 +117,8 @@ MovCur:
 	; so just follow the forumla: location = _CurX + _CurY * COLS
 	xor	eax, eax
 	mov	ecx, COLS
+  mov	byte [_CurX], bl
+	mov	byte [_CurY], bh
 	mov	al, bh			; get y pos
 	mul	ecx			; multiply y*COLS
 	add	al, bl			; Now add x
