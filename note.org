@@ -62,4 +62,6 @@ All I/O Ports are mapped to a given memory location. This allows us to use the
   0x10047, the address becomes 0x00047 after we load it into a register.
 * Global Descriptor Table
 - Provide parameters for code/data segments i.e. where each segment starts.
+- Once getting into Protected Mode, jump must use the selectors defined by the
+  table. Absolute address has no effect.
 * Basic VGA programming
