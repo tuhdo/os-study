@@ -64,4 +64,11 @@ All I/O Ports are mapped to a given memory location. This allows us to use the
 - Provide parameters for code/data segments i.e. where each segment starts.
 - Once getting into Protected Mode, jump must use the selectors defined by the
   table. Absolute address has no effect.
+** Exercises
+- Load and execute the kernel at 0x1000 in protected mode.
+- Load and execute the kernel at 0x10000 in protected mode.
+- Load and execute the kernel at 0x20000 in protected mode.
+- Load and execute the kernel at 0x100F0 in protected mode.
+- Load and execute the kernel at 0x10FF0 in protected mode.
+- Load and execute the kernel at 0x10FFF in protected mode.
 * Basic VGA programming
