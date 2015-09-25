@@ -72,3 +72,7 @@ All I/O Ports are mapped to a given memory location. This allows us to use the
 - Load and execute the kernel at 0x10FF0 in protected mode.
 - Load and execute the kernel at 0x10FFF in protected mode.
 * Basic VGA programming
+- Write a character at position (5,5).
+- Write a character at position (10,10).
+- Write a string at position (5,5).
+- Write two string at position (5,5) and (5,6) by moving the cursor.
