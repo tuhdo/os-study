@@ -1,5 +1,9 @@
 * Tools: Build and install Bochs
+** nasm
+Add option -l for listing label addresses.
 ** bochs
+Another trick to simply move the label address to one of a register and for it
+to be stored in Bochs log.
 ** bochsdbg
 * Bootloader
 ** General algorithm
