@@ -48,7 +48,20 @@ gdt_data:
 	db 11001111b 			; granularity
 	db 0				; base high
 
+; Call gate (Offset: 24 (0x18) bytes
+	; gdt code:				; code descriptor
+	dw 0FFFFh 			; limit lowl
+	dw 0 				; base low
+	db 0x02 				; base middle
+	db 10011010b 			; access
+	db 11001111b 			; granularity
+	db 0 				; base high
+
+	; End of the GDT. Define the routine wherever
+	; The call gate routine
+
 end_of_gdt:
+
 toc:
   ; according to lgdt description, the instruction accepts a 6-bytes
   ; operand, with the lowest 2 bytes size of GDT, and the remaining

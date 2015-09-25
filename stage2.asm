@@ -50,6 +50,19 @@ main:
   mov	ah, 0x02			; read floppy sector function
 	int	0x13					; call BIOS - Read the sector
 
+	; move kernel to address 0x10FF0
+	mov	ax, 0x20FF
+	mov	es, ax
+	xor	bx, bx
+
+  mov	num_of_sectors, 1					; read 1 sector
+	mov	track_num, 0					; we are reading the second sector past us, so its still on track 0
+	mov	sector_num, 4					; sector to read (The second sector)
+	mov	head_num, 0					; head number
+	mov	drive_num, 0					; drive number. Remember Drive 0 is floppy drive.
+  mov	ah, 0x02			; read floppy sector function
+	int	0x13					; call BIOS - Read the sector
+
 	;-------------------------------;
 	;   Setup segments and stack	;
 	;-------------------------------;

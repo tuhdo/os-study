@@ -33,7 +33,8 @@ Stage3:
 	call ClrScr32
 	mov eax, WelcomeMsg
 	call Puts32
-	cli
+
+  call 0x18:0xFF0
 
   ;*******************************************************
   ;	Stop execution
