@@ -50,7 +50,7 @@ main:
   mov	ah, 0x02			; read floppy sector function
 	int	0x13					; call BIOS - Read the sector
 
-	; move kernel to address 0x10FF0
+	; move userspace to address 0x20FF0
 	mov	ax, 0x20FF
 	mov	es, ax
 	xor	bx, bx
