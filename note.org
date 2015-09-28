@@ -82,3 +82,11 @@ http://wiki.osdev.org/GDT
 - Write a character at position (10,10).
 - Write a string at position (5,5).
 - Write two string at position (5,5) and (5,6) by moving the cursor.
+* Getting into User Space
+- Kernel cannot jump/call into code in userspace directly. Fault occurs when
+  trying ot do so. We can only jump from lower privilege code to higher (i.e.
+  from ring 3 to ring 0).
+- Must execute IRET instruction. We must push appropriate data on the stack for
+  the instruction to use. This is important.
+- Must Define userspace segments (code and data) in GDT, so IRET can jump properly
+
