@@ -168,8 +168,5 @@ ClrScr32:
   ; 2 bytes: the first is character and the 2nd is the attrubte of that
   ; character. We only want to modify the first byte every 2 bytes.
 	rep	stosw
-
-	mov	byte [_CurX], 20
-	mov	byte [_CurY], 5
 	popa
 	ret
