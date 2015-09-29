@@ -2,9 +2,10 @@ org 0x10FF0
 
 bits 32
 
-  cmp bl, 1
-  je UserMode
-  jmp Stage3
+cmp bl, 1
+je STOP
+
+jmp Stage3
   ; Print green background
 
   ; mov ah, 0bh
@@ -19,11 +20,49 @@ bits 32
 
 %include "stdio32.inc"
 
-  WelcomeMsg db "Welcome to Tu's Operating System", 0ah, 0h
+WelcomeMsg db "Welcome to Tu's Operating System", 0ah, 0h
+GoodbyeMsg db "See ya later", 0ah, 0h
 
-UserMode:
-  call 0x28:0xFF0
-  retf
+%define IA32_SYSENTER_CS 0x174
+%define IA32_SYSENTER_ESP 0x175
+%define IA32_SYSENTER_EIP 0x176
+
+sysenter_setup:
+  ; MSR[ECX] <- EDX:EAX
+  ; Writes the contents of registers EDX:EAX into the 64-bit model specific
+  ; register (MSR) speci- fied in the ECX register. The high-order 32 bits are
+  ; copied from EDX and the low-order 32 bits are copied from EAX. Always set
+  ; the undefined or reserved bits in an MSR to the values previ- ously read.
+	mov	eax, 0x8				; kernel code descriptor
+	mov	edx, 0
+	mov	ecx, IA32_SYSENTER_CS
+	wrmsr
+
+	mov	eax, esp
+	mov	edx, 0
+	mov	ecx, IA32_SYSENTER_ESP
+	wrmsr
+
+	mov	eax, Sysenter_Entry
+	mov	edx, 0
+	mov	ecx, IA32_SYSENTER_EIP
+	wrmsr
+  ret
+
+Sysenter_Entry:
+	; sysenter jumps here, is is executing this code at prividege level 0. Simular to Call Gates, normally we will
+	; provide a single entry point for all system calls.
+  cmp eax, 0
+  je STOP
+
+  cmp eax, 1
+  je monitor_out
+
+  cmp eax, 2
+  je clrscr
+  ; mov eax, GoodbyeMsg
+  ; call Puts32
+  sysexit
 
 Stage3:
   ;-------------------------------;
@@ -36,7 +75,13 @@ Stage3:
   mov		esp, 90000h		; stack begins from 90000h
   mov   edi, 0xFFFFFFFF         ; test 32 bit
 
+  call sysenter_setup
+
   call ClrScr32
+  mov bl, 20
+  mov bh, 5
+  call MovCur
+
   mov eax, WelcomeMsg
   call Puts32
 
@@ -60,6 +105,15 @@ Stage3:
   ;*******************************************************
   ;	Stop execution
   ;*******************************************************
+
+monitor_out:
+  mov eax, GoodbyeMsg
+  call Puts32
+  sysexit
+
+clrscr:
+  call ClrScr32
+  sysexit
 
 STOP:
   cli
