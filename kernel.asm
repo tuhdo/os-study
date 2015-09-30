@@ -2,9 +2,6 @@ org 0x10FF0
 
 bits 32
 
-cmp bl, 1
-je STOP
-
 jmp Stage3
   ; Print green background
 
@@ -53,13 +50,13 @@ Sysenter_Entry:
 	; sysenter jumps here, is is executing this code at prividege level 0. Simular to Call Gates, normally we will
 	; provide a single entry point for all system calls.
   cmp eax, 0
-  je STOP
+  je clrscr
 
   cmp eax, 1
   je monitor_out
 
   cmp eax, 2
-  je clrscr
+  je STOP
   ; mov eax, GoodbyeMsg
   ; call Puts32
   sysexit
@@ -78,6 +75,7 @@ Stage3:
   call sysenter_setup
 
   call ClrScr32
+
   mov bl, 20
   mov bh, 5
   call MovCur
@@ -107,8 +105,22 @@ Stage3:
   ;*******************************************************
 
 monitor_out:
+  ; use kernel data segment, not userspace
+  ; we must explicitly set, otherwise when we are trying to retrieve the
+  ; data, 0x23 is used with eax for indexing instead.
+  mov		ax, 0x10		; set data segments to data selector (0x10)
+  mov		ds, ax
+
+  mov bl, 20
+  mov bh, 10
+  call MovCur
+
   mov eax, GoodbyeMsg
   call Puts32
+
+  ; restore back the stack for userspace afterward
+  mov ax, 0x23
+  mov ds, ax
   sysexit
 
 clrscr:

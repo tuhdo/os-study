@@ -14,7 +14,9 @@ _CurY db 5
 
 Putch32:
   pusha				; save registers
-  mov	edi, VIDMEM		; get pointer to video memory
+  ; mov	edi, VIDMEM		; get pointer to video memory, not working after entering userspace (ring 3)
+  mov edi, 0x28
+  mov es, edi
 
   ;-------------------------------;
   ;   Get current position	;
@@ -30,11 +32,11 @@ Putch32:
   mov	ecx, COLS*2		; Mode 7 has 2 bytes per char, so its COLS*2 bytes per line
   mov	al, byte [_CurY]	; get y pos
   mul	ecx			; multiply y*COLS
-  push	eax			; save eax--the multiplication
+  push eax			; save eax--the multiplication
 
   ;--------------------------------
   ; Now y * screen width is in eax. Now, just add _CurX. But, again remember that _CurX is relative
-  ; to the current character count, not byte count. Because there are two bytes per character, we
+  ; to the pcurrent character count, not byte count. Because there are two bytes per character, we
   ; have to multiply _CurX by 2 first, then add it to our screen width * y.
   ;--------------------------------
   mov	al, byte [_CurX]	; multiply _CurX by 2 because it is 2 bytes per char
@@ -47,9 +49,8 @@ Putch32:
   ; Now eax contains the offset address to draw the character at, so just add it to the base address
   ; of video memory (Stored in edi)
   ;-------------------------------
-  xor	ecx, ecx
-  add	edi, eax		; add it to the base address
-
+  ; xor	ecx, ecx
+  ; add	edi, eax		; add it to the base address
 
   ;-------------------------------;
   ;   Watch for new line          ;
@@ -62,7 +63,7 @@ Putch32:
   ;-------------------------------;
   mov	dl, bl			; Get character
   mov	dh, CHAR_ATTRIB		; the character attribute
-	mov word [edi], dx		; write to video display
+	mov word [es:eax], dx		; write to video display
 
   ;-------------------------------;
   ;   Update next position        ;
@@ -158,15 +159,25 @@ MovCur:
 ClrScr32:
 	pusha
 	cld
-	mov	edi, VIDMEM
-	mov	cx, 2000
-	mov	ah, CHAR_ATTRIB
-	mov	al, ' '
+  mov eax, 0x28
+  mov es, eax
+  mov ebx, 0
+  mov ecx, 2000
+.loop:
+  cmp ecx, 0
+  je .done
+  mov byte [es:ebx], ' '
+  inc ebx
+  mov byte [es:ebx], CHAR_ATTRIB
+  inc ebx
+  dec ecx
+  jmp .loop
   ; rep to repeat an instruction CX times. stosw to store al to the address in
   ; edi, then increment by one. the amount depends on which stos[b/w/d]
   ; instruction is used. in this case, we use stosw because video memory include
   ; 2 bytes: the first is character and the 2nd is the attrubte of that
   ; character. We only want to modify the first byte every 2 bytes.
-	rep	stosw
-	popa
+	; rep	stosw
+.done:
+  popa
 	ret

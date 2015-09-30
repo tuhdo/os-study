@@ -52,7 +52,7 @@ gdt_data:
 	dw 0FFFFh				; limit low
 	dw 0				; base low
 	db 0x2				; base middle
-	db 11111010b			; access - Notice that bits 5 and 6 (privilege level) are 11b for Ring 3
+	db 11111110b			; access - Notice that bits 5 and 6 (privilege level) are 11b for Ring 3
 	db 11001111b			; granularity
 	db 0				; base high
 
@@ -64,18 +64,21 @@ gdt_data:
 	db 11001111b			; granularity
 	db 0				; base high
 
-	; Call gate (Offset: 40 (0x28) bytes
-  dw 0FFFFh				; limit lowl
-	dw 0				; base low
-	db 0x2					; base middle
-	db 11111010b			; access
-	db 11001111b			; granularity
-	db 0				; base high
+	; video memory: 40  (0x28)
+	dw 0x07D0  										; limit
+	dw 0x8000												; base low
+	db 0x0B												; base middle
+	db 11110010b
+	db 11001111b									; granularity
+	db 0													; base high
 
 	; End of the GDT. Define the routine wherever
 	; The call gate routine
 
 end_of_gdt:
+
+Gate:
+	retf
 
 toc:
 	; according to lgdt description, the instruction accepts a 6-bytes

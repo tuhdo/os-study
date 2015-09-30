@@ -13,19 +13,19 @@ Gate1:
 	sysenter
 
 Stop:
-  mov eax, 2
+  mov eax, 0
+  mov ecx, esp
+  mov edx, .stop1
+  sysenter
+
+.stop1:
+  mov eax, 1
   mov ecx, esp
   mov edx, .stop2
   sysenter
 
-; .stop1:
-;   mov eax, 1
-;   mov ecx, esp
-;   mov edx, .stop2
-;   sysenter
-
 .stop2:
-  mov eax, 0
+  mov eax, 2
   mov ecx, esp
   sysenter
   ; cli
