@@ -1,0 +1,32 @@
+* DONE Add kernel code/data segment 
+CLOSED: [2015-09-29 Tue 16:05]
+* DONE Add userspace code/data segment
+CLOSED: [2015-09-29 Tue 16:05]
+* DONE Add custom code/data segments (i.e. overlapping segments)
+CLOSED: [2015-09-29 Tue 16:05]
+* DONE Implement User Space (from ring 0 to ring 3)
+CLOSED: [2015-09-29 Tue 16:04]
+* PROGRESS Implmenet system call (from ring 3 to ring 0)
+** DONE Use *sysenter* instruction properly
+CLOSED: [2015-09-29 Tue 18:22]
+Must setup in ring 0 the system call entry before getting into ring 3.
+Otherwise, *wrmsr* and *rdmsr* don't work.
+** DONE Use *sysexit* instruction properly
+CLOSED: [2015-09-29 Tue 18:22]
+We must push stack pointer to ecx, return address to edx for it to work properly
+before calling *sysenter*
+** DONE Make writing on scree properly after entering userspace
+CLOSED: [2015-09-30 Wed 13:47]
+Things to remember:
+- After protected mode is entered, everything is accessed via segments.
+- As a result, when switching between userspace and kernel space, we must use
+  appropriate segments, otherwise even registers may hold correct address, wrong
+  address is still accessed.
+- Better define segment descriptor for specific memory mapping, i.e. video memory.
+- EIP is relative to segment.
+
+ClrScr32 works properly by using segment. Putch32 works properly by using
+segment.
+
+Learning how to create and manipulate properly is important.
+
