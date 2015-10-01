@@ -6,7 +6,8 @@ CLOSED: [2015-09-29 Tue 16:05]
 CLOSED: [2015-09-29 Tue 16:05]
 * DONE Implement User Space (from ring 0 to ring 3)
 CLOSED: [2015-09-29 Tue 16:04]
-* PROGRESS Implmenet system call (from ring 3 to ring 0)
+* DONE Implmenet system call (from ring 3 to ring 0)
+CLOSED: [2015-10-01 Thu 16:23]
 ** DONE Use *sysenter* instruction properly
 CLOSED: [2015-09-29 Tue 18:22]
 Must setup in ring 0 the system call entry before getting into ring 3.
@@ -29,4 +30,6 @@ ClrScr32 works properly by using segment. Putch32 works properly by using
 segment.
 
 Learning how to create and manipulate properly is important.
-
+* DONE Reorganize source code
+CLOSED: [2015-10-01 Thu 16:24]
+* PROGRESS Create C/C++ Runtime Library (CRT) and Hardware Abstraction Layer (HAL)
