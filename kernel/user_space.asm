@@ -27,6 +27,10 @@ Stop:
 .stop2:
   mov eax, 2
   mov ecx, esp
+  mov edx, .stop3
   sysenter
-  ; cli
-  ; hlt
+
+.stop3:
+  mov eax, 3
+  mov ecx, esp
+  sysenter

@@ -72,13 +72,18 @@ gdt_data:
 	db 11001111b									; granularity
 	db 0													; base high
 
+	; INT0: 48 (0x30)
+	dw 0FFFFh				; limit low
+	dw 0				; base low
+	db 0x02					; base middle
+	db 10011010b			; access
+	db 11001111b			; granularity
+	db 0				; base high
+
 	; End of the GDT. Define the routine wherever
 	; The call gate routine
 
 end_of_gdt:
-
-Gate:
-	retf
 
 toc:
 	; according to lgdt description, the instruction accepts a 6-bytes

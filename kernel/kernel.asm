@@ -56,6 +56,9 @@ Sysenter_Entry:
   je monitor_out
 
   cmp eax, 2
+  je test_intr
+
+  cmp eax, 3
   je STOP
   ; mov eax, GoodbyeMsg
   ; call Puts32
@@ -127,6 +130,13 @@ clrscr:
   call ClrScr32
   sysexit
 
+test_intr:
+  mov eax, 1
+  int 1
+
+  sysexit
+
 STOP:
   cli
   hlt
+9
