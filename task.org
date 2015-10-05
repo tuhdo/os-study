@@ -32,14 +32,17 @@ segment.
 Learning how to create and manipulate properly is important.
 * DONE Reorganize source code
 CLOSED: [2015-10-01 Thu 16:24]
-* PROGRESS Create C/C++ Runtime Library (CRT) and Hardware Abstraction Layer (HAL)
-** Construct a ctype.h
+* DONE Create C/C++ Runtime Library (CRT) and Hardware Abstraction Layer (HAL)
+CLOSED: [2015-10-05 Mon 18:28]
+** DONE Construct a ctype.h
+CLOSED: [2015-10-05 Mon 18:28]
 - Need to understand the array ctype[] is holding type of character in ASCII,
   not the characters itself. We check the character types by indexed into the
   array.
 
 - Construct convenient routines for character/string manipulation.
-** Construct macro to process variable number of arguments
+** DONE Construct macro to process variable number of arguments
+CLOSED: [2015-10-05 Mon 18:28]
 - Create va_list.h that creates a aliased type for char pointer to access
   memory locations of arguments of a function.
 - Create VA_SIZE that calculates the size of an argument.
@@ -50,3 +53,7 @@ CLOSED: [2015-10-01 Thu 16:24]
 - Create a va_arg to access current argument in argument list. We must supply a
   type for correct return the argument with appropriate type as well as
   advancing AP pointer to the correct position of the next argument.
+* PROGRESS Interrupt
+** DONE Build an IDT for one interrupt and able to jump to it
+CLOSED: [2015-10-05 Mon 18:29]
+** PROGRESS After entering interupt routine, we should be able to return properly
