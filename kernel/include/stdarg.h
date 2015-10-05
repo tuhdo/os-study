@@ -1,3 +1,5 @@
+#include "va_list.h"
+
 /* width of stack == width of int */
 #define	STACKITEM	int
 
@@ -6,3 +8,14 @@
 #define	VA_SIZE(TYPE)                           \
     ((sizeof(TYPE) + sizeof(STACKITEM) - 1)     \
      & ~(sizeof(STACKITEM) - 1))
+
+/* &(LASTARG) points to the LEFTMOST argument of the function call
+   (before the ...) */
+#define	va_start(AP, LASTARG)                     \
+    (AP=((va_list)&(LASTARG) + VA_SIZE(LASTARG)))
+
+/* nothing for va_end */
+#define va_end(AP)
+
+#define va_arg(AP, TYPE)                                    \
+    (AP += VA_SIZE(TYPE), *((TYPE *)(AP - VA_SIZE(TYPE))))
