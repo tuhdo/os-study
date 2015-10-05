@@ -33,3 +33,20 @@ Learning how to create and manipulate properly is important.
 * DONE Reorganize source code
 CLOSED: [2015-10-01 Thu 16:24]
 * PROGRESS Create C/C++ Runtime Library (CRT) and Hardware Abstraction Layer (HAL)
+** Construct a ctype.h
+- Need to understand the array ctype[] is holding type of character in ASCII,
+  not the characters itself. We check the character types by indexed into the
+  array.
+
+- Construct convenient routines for character/string manipulation.
+** Construct macro to process variable number of arguments
+- Create va_list.h that creates a aliased type for char pointer to access
+  memory locations of arguments of a function.
+- Create VA_SIZE that calculates the size of an argument.
+- Create VA_START that jump to the beginning of variable arguments based on the
+  last concrete  argument in the function argument list and start the
+  loop to process argument by argument.
+- Create VA_END that terminate the loop.
+- Create a va_arg to access current argument in argument list. We must supply a
+  type for correct return the argument with appropriate type as well as
+  advancing AP pointer to the correct position of the next argument.
