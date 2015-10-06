@@ -1,16 +1,19 @@
+org 0x20000
+
 bits 32
 
 je int_handler1
 
 %include "stdio32.inc"
 
-InterruptMsg  db "Interrupting", 0ah, 0h
+  InterruptMsg  db "Calling from interrupt", 0ah, 0h
 
 int_handler1:
   mov bl, 5
   mov bh, 5
   call MovCur
 
+  mov eax, InterruptMsg
   call Puts32
 
   pusha
