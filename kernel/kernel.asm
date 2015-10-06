@@ -138,7 +138,7 @@ clrscr:
   jmp syscall_exit
 
 test_intr:
-  mov eax, 1
+  mov eax, InterruptMsg
   int 1
 
   ; mov	ax, 0x10		; set data segments to data selector (0x10)

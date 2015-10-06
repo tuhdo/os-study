@@ -1,9 +1,5 @@
 bits 32
 
-cmp eax, 0
-je int_handler1
-
-cmp eax, 1
 je int_handler1
 
 %include "stdio32.inc"
@@ -11,6 +7,12 @@ je int_handler1
 InterruptMsg  db "Interrupting", 0ah, 0h
 
 int_handler1:
+  mov bl, 5
+  mov bh, 5
+  call MovCur
+
+  call Puts32
+
   pusha
   ; mov		ax, 0x10		; set data segments to data selector (0x10)
   ; mov		ds, ax
@@ -18,9 +20,6 @@ int_handler1:
   ; mov bl, 5
   ; mov bh, 5
   ; call MovCur
-
-  ; mov eax, InterruptMsg
-  ; call Puts32
 
   ; ; restore back the stack for userspace afterward
   ; mov ax, 0x23
