@@ -18,6 +18,7 @@ jmp Stage3
 %include "stdio32.inc"
 
 WelcomeMsg db "Welcome to Tu's Operating System", 0ah, 0h
+InterruptMsg  db "Interrupting", 0ah, 0h
 GoodbyeMsg db "See ya later", 0ah, 0h
 
 %define IA32_SYSENTER_CS 0x174
@@ -47,6 +48,8 @@ sysenter_setup:
   ret
 
 Sysenter_Entry:
+  mov		bx, 0x10		; set data segments to data selector (0x10)
+  mov		ds, bx
 	; sysenter jumps here, is is executing this code at prividege level 0. Simular to Call Gates, normally we will
 	; provide a single entry point for all system calls.
   cmp eax, 0
@@ -62,6 +65,10 @@ Sysenter_Entry:
   je STOP
   ; mov eax, GoodbyeMsg
   ; call Puts32
+syscall_exit:
+  ; restore back the stack for userspace afterward
+  mov bx, 0x23
+  mov ds, bx
   sysexit
 
 Stage3:
@@ -111,8 +118,8 @@ monitor_out:
   ; use kernel data segment, not userspace
   ; we must explicitly set, otherwise when we are trying to retrieve the
   ; data, 0x23 is used with eax for indexing instead.
-  mov		ax, 0x10		; set data segments to data selector (0x10)
-  mov		ds, ax
+  ; mov		ax, 0x10		; set data segments to data selector (0x10)
+  ; mov		ds, ax
 
   mov bl, 20
   mov bh, 10
@@ -122,21 +129,30 @@ monitor_out:
   call Puts32
 
   ; restore back the stack for userspace afterward
-  mov ax, 0x23
-  mov ds, ax
-  sysexit
+  ; mov ax, 0x23
+  ; mov ds, ax
+  jmp syscall_exit
 
 clrscr:
   call ClrScr32
-  sysexit
+  jmp syscall_exit
 
 test_intr:
   mov eax, 1
   int 1
 
-  sysexit
+  ; mov	ax, 0x10		; set data segments to data selector (0x10)
+  ; mov	ds, ax
+
+  ; mov bl, 5
+  ; mov bh, 5
+  ; call MovCur
+
+  ; mov eax, InterruptMsg
+  ; call Puts32
+  jmp syscall_exit
 
 STOP:
   cli
   hlt
-9
+
