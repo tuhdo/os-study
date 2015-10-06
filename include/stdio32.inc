@@ -92,9 +92,9 @@ Puts32:
   pusha
   ; Print a character at a time
 .loop_Puts32:
-  cmp byte [eax], 0
+  cmp byte [ds:eax], 0
   je .done_Puts32
-  mov bl, [eax]
+  mov bl, [ds:eax]
   call Putch32
   inc eax
   jmp .loop_Puts32
