@@ -6,6 +6,8 @@ CLOSED: [2015-09-29 Tue 16:05]
 CLOSED: [2015-09-29 Tue 16:05]
 * DONE Implement User Space (from ring 0 to ring 3)
 CLOSED: [2015-09-29 Tue 16:04]
+** DONE Create a call gate for userspace code to call into kernel space
+CLOSED: [2015-10-08 Thu 18:29]
 * DONE Implmenet system call (from ring 3 to ring 0)
 CLOSED: [2015-10-01 Thu 16:23]
 ** DONE Use *sysenter* instruction properly
@@ -56,6 +58,10 @@ CLOSED: [2015-10-05 Mon 18:28]
 * PROGRESS Interrupt
 ** DONE Build an IDT for one interrupt and able to jump to it
 CLOSED: [2015-10-05 Mon 18:29]
+*** DONE Create a GDT entry for the interrupt
+CLOSED: [2015-10-08 Thu 18:27]
+*** DONE Credat a IDT entry for the interrupt
+CLOSED: [2015-10-08 Thu 18:27]
 ** DONE After entering interupt routine, we should be able to return properly
 CLOSED: [2015-10-06 Tue 16:01]
 ** DONE We should be able to define and use variables in the same file
@@ -64,6 +70,18 @@ To do this, we must use *org* directive to tell the assembler where this file
 starts from in memory, so it can generate precise memory location. Without *org*
 directive, all we get is just an offset of a variable, from where it is to the start
 of the file.
+** PROGRESS Call interrupts from userspace code
+
+_Exercises_:
+
+- What happens when an interrupt generated from userspace but the corresponding
+  IDT of the ISR only has DPL = 00b?
+
+- What happens when an interrupt generated from userspace but the corresponding
+  GDT of the ISR only has DPL = 00b?
+*** Make ISR able to access userspace data, so that it can retrieve function arguments
 ** PROGRESS Program the 8256A PIC
 http://stanislavs.org/helppc/8259.html
 ** Find a formula to calculate address of interrupt service routines, not hard code
+** Handlde division by 0 interrupt
+Current problem: it always returns to erroneous div instruction.
