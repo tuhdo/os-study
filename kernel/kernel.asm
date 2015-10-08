@@ -60,7 +60,7 @@ Sysenter_Entry:
   je monitor_out
 
   cmp eax, 2
-  je test_intr
+  je test_intr_kernel_space
 
   cmp eax, 3
   je STOP
@@ -106,11 +106,11 @@ Stage3:
   mov gs,ax ;we don't need to worry about SS. it's handled by iret
 
   mov eax, esp
-  push 0x23 ;user data segment with bottom 2 bits set for ring 3
-  push eax ;push our current stack just for the heck of it
+  push 0x23 ; user data segment with bottom 2 bits set for ring 3
+  push eax ; push our current stack just for the heck of it
   pushf
-  push 0x1b; ;user data segment with bottom 2 bits set for ring 3
-  push 0xFF0 ;may need to remove the _ for this to work right 
+  push 0x1b; ;user code segment with bottom 2 bits set for ring 3
+  push 0xFF0 ; offset address
   iret
 
   ;*******************************************************
@@ -140,10 +140,15 @@ clrscr:
   call ClrScr32
   jmp syscall_exit
 
-test_intr:
-  mov eax, InterruptMsg
-  int 1
+test_intr_kernel_space:
+  ; mov ecx, 1
+  ; int 1
 
+  ; push syscall_exit
+  ; mov ecx, 0
+  ; mov ax, 3
+  ; mov dl, 0
+  ; div dl
   ; mov	ax, 0x10		; set data segments to data selector (0x10)
   ; mov	ds, ax
 
