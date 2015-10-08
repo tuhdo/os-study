@@ -13,14 +13,14 @@ idt_start:
   dw   0
   dw   0x30
   db   0
-  db   011001110b
+  db   11101111b
   dw   0
 
   ;; IRQ1
   dw   0
   dw   0x30
   db   0
-  db   011001110b
+  db   11101110b
   dw   0
 
 ;; IRQ2

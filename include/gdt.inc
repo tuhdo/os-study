@@ -76,7 +76,15 @@ gdt_data:
 	dw 0FFFFh				; limit low
 	dw 0				; base low
 	db 0x02					; base middle
-	db 10011010b			; access
+	db 11111010b			; access
+	db 11001111b			; granularity
+	db 0				; base high
+
+	; call gate to kernel space: 56 (0x38)
+	dw 0FFFFh				; limit low
+	dw 0				; base low
+	db 0x01					; base middle
+	db 11111010b			; access
 	db 11001111b			; granularity
 	db 0				; base high
 
