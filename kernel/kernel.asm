@@ -16,6 +16,7 @@ jmp Stage3
   ; Welcome to the 32 bit world!
 
 %include "stdio32.inc"
+%include "pic.inc"
 
 WelcomeMsg db "Welcome to Tu's Operating System", 0ah, 0h
 InterruptMsg  db "Interrupting", 0ah, 0h
@@ -92,6 +93,8 @@ Stage3:
 
   mov eax, WelcomeMsg
   call Puts32
+
+  call MapPIC
 
   ; AMAZING
   ; Link to read for understanding: http://www.jamesmolloy.co.uk/tutorial_html/10.-User%20Mode.html

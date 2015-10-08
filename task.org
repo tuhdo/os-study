@@ -53,8 +53,7 @@ CLOSED: [2015-10-05 Mon 18:28]
 - Create a va_arg to access current argument in argument list. We must supply a
   type for correct return the argument with appropriate type as well as
   advancing AP pointer to the correct position of the next argument.
-* DONE Interrupt
-CLOSED: [2015-10-06 Tue 16:01]
+* PROGRESS Interrupt
 ** DONE Build an IDT for one interrupt and able to jump to it
 CLOSED: [2015-10-05 Mon 18:29]
 ** DONE After entering interupt routine, we should be able to return properly
@@ -65,3 +64,6 @@ To do this, we must use *org* directive to tell the assembler where this file
 starts from in memory, so it can generate precise memory location. Without *org*
 directive, all we get is just an offset of a variable, from where it is to the start
 of the file.
+** PROGRESS Program the 8256A PIC
+http://stanislavs.org/helppc/8259.html
+** Find a formula to calculate address of interrupt service routines, not hard code
