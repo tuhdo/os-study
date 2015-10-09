@@ -56,6 +56,7 @@ CLOSED: [2015-10-05 Mon 18:28]
   type for correct return the argument with appropriate type as well as
   advancing AP pointer to the correct position of the next argument.
 * PROGRESS Interrupt
+[[http://stackoverflow.com/questions/3425085/the-difference-between-call-gate-interrupt-gate-trap-gate][The difference between Call Gate, Interrupt Gate, Trap Gate?]]
 ** DONE Build an IDT for one interrupt and able to jump to it
 CLOSED: [2015-10-05 Mon 18:29]
 *** DONE Create a GDT entry for the interrupt
@@ -70,7 +71,8 @@ To do this, we must use *org* directive to tell the assembler where this file
 starts from in memory, so it can generate precise memory location. Without *org*
 directive, all we get is just an offset of a variable, from where it is to the start
 of the file.
-** PROGRESS Call interrupts from userspace code
+** DONE Call interrupts from userspace code
+CLOSED: [2015-10-09 Fri 15:49]
 
 _Exercises_:
 
@@ -79,9 +81,13 @@ _Exercises_:
 
 - What happens when an interrupt generated from userspace but the corresponding
   GDT of the ISR only has DPL = 00b?
-*** Make ISR able to access userspace data, so that it can retrieve function arguments
+**** DONE Make ISR able to access userspace data, so that it can retrieve function arguments
+CLOSED: [2015-10-09 Fri 15:41]
+Since everything is accessed via segment, if we want to access userspace data
+universally everywhere with absolute addressing, make userspace data segment has
+base 0 with offset 0.
 ** PROGRESS Program the 8256A PIC
 http://stanislavs.org/helppc/8259.html
-** Find a formula to calculate address of interrupt service routines, not hard code
+** Find a formula to calculate address of interrupt service routines, not hard code addressses
 ** Handlde division by 0 interrupt
 Current problem: it always returns to erroneous div instruction.
