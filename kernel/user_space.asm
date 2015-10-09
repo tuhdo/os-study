@@ -20,6 +20,10 @@ Stop:
   ; mov ax, 3
   ; mov dl, 0
   ; div dl
+  mov ecx, 0
+  mov eax, 3
+  mov edx, 0
+  div dl
 
   mov eax, 0
   mov ecx, esp
