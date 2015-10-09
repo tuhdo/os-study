@@ -46,7 +46,7 @@ gdt_data:
 	db 0x0				; base middle
 	db 10010010b			; access
 	db 11001111b			; granularity
-	db 0				; base high
+	db 0				; base highi
 
 	; User Space code (Offset: 24 (0x18) bytes)
 	dw 0FFFFh				; limit low
@@ -59,7 +59,7 @@ gdt_data:
 	; User Space data (Offset: 32 (0x20) bytes
 	dw 0FFFFh				; limit low (Same as code)
 	dw 0				; base low
-	db 0x02				; base middle
+	db 0x00				; base middle
 	db 11110010b			; access - Notice that bits 5 and 6 (privilege level) are 11b for Ring 3
 	db 11001111b			; granularity
 	db 0				; base high

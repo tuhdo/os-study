@@ -9,21 +9,13 @@ Gate1:
   or eax, 0x200 ; Set the IF flag.
   push eax ; Push the new EFLAGS value back onto the stack. 
   mov ecx, esp
-  mov edx, test_intr_user_space
+  mov edx, Stop
 	sysenter
-
-test_intr_user_space:
-  mov ecx, 1
-  int 1
 
 Stop:
   ; mov ax, 3
   ; mov dl, 0
   ; div dl
-  mov ecx, 0
-  mov eax, 3
-  mov edx, 0
-  div dl
 
   mov eax, 0
   mov ecx, esp
@@ -31,6 +23,15 @@ Stop:
   sysenter
 
 .stop1:
+  mov ecx, 0
+  mov eax, 3
+  mov edx, 0
+  div dl
+
+.test_intr_user_space:
+  mov ecx, 1
+  int 1
+
   mov eax, 1
   mov ecx, esp
   mov edx, .stop2

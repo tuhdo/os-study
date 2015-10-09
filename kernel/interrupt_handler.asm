@@ -33,11 +33,10 @@ int_handler1:
   ; and eax, 0xFFFF
   call MovCur
 
-  ; mov ebx, Puts32
-  ; and ebx, 0xFFFF
   mov eax, InterruptMsg
+  ; and eax, 0xFFFF  ; retrieve offset only when base address is something different than 0
   ; call 0x38:0x1008a
-  call MovCur
+  call Puts32
 
   pusha
   ; mov		ax, 0x10		; set data segments to data selector (0x10)
@@ -57,8 +56,8 @@ int_handler1:
   ; segmented address.
 
 ireturn:
-  mov eax, [esp]
-  and eax, 0xFFFF
-  mov [esp], eax
+  mov ecx, [esp]
+  and ecx, 0xFFFF
+  mov [esp], ecx
 
   iret
