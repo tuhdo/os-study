@@ -4,7 +4,7 @@ display_library: sdl2
  
 # boot from floppy using our disk image -------------------------------
  
-floppya: 1_44="/home/tuhdo/workspace/study/os/disk.dsk", status=inserted  # Boot from drive A
+floppya: 1_44="/home/tuhdo/workspace/study/os-study/disk.dsk", status=inserted  # Boot from drive A
  
 # logging and reporting -----------------------------------------------
  
