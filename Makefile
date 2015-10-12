@@ -5,6 +5,7 @@ include common.mk
 all: build_bin boot.dsk
 
 build_bin:
+	mkdir build
 	make -C bootloader
 	make -C kernel
 
@@ -16,4 +17,4 @@ boot.dsk:
 	dd if=$(BUILD_DIR)/interrupt_handler.bin of=disk.dsk bs=512 count=1 seek=7
 
 clean:
-	rm -rf build/*.bin disk.dsk
+	rm -rf build/ disk.dsk
