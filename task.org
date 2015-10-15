@@ -103,7 +103,19 @@ It's the macro *install_isr*
 *** DONE Create a sample interrupt handler for an IRQ i.e. IRQ 0
 CLOSED: [2015-10-15 Thu 15:06]
 It's _isr0 in my code that does actual work.
-*** PROGRESS Select an appropriate ISR service rountines from array of ISRs and call it
+*** DONE Select an appropriate ISR service rountines from array of ISRs and call it
+CLOSED: [2015-10-15 Thu 16:05]
+The array is:
+
+isrs:
+  dd _isr0
+
+From the starting address of *isrs*, we calculate offset into appropriate
+function pointer of an IRQ number. For example, offset to IRQ 5 is calculated
+as:
+
+<address of isrs> + 4 * IRQ_Number
+
 ** PROGRESS Program the 8256A PIC
 http://stanislavs.org/helppc/8259.html
 *** Get it working

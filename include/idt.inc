@@ -39,6 +39,8 @@ isr%1:
 ;; 5. Run interrupt handler.
 ;; 6. Restore registers back to its original states.
 irq_common:
+  xor ecx, ecx
+  mov cl, [esp + 4]            ; get IRQ number
   pushad
 
   mov ax, ds               ; Lower 16-bits of eax = ds.
@@ -50,13 +52,16 @@ irq_common:
   mov gs, ax
 
   ; calculate index into isrs table
-  mov eax, [esp + 4]            ; load IRQ number
+  xor eax, eax
+  mov al, cl            ; load IRQ number
   mov bl, 4
   mul bl
   mov ebx, eax
   mov eax, isrs
   add eax, ebx
-  ; call eax
+  mov eax, [eax]
+  and eax, 0xFFFF
+  call eax
 
   pop eax        ; reload the original registers
   mov ds, ax
