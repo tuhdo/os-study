@@ -116,6 +116,7 @@ as:
 
 <address of isrs> + 4 * IRQ_Number
 
+** PROGRESS Allocate more disk space for interrupt handlers
 ** PROGRESS Program the 8256A PIC
 http://stanislavs.org/helppc/8259.html
 *** Get it working
