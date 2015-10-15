@@ -86,8 +86,26 @@ CLOSED: [2015-10-09 Fri 15:41]
 Since everything is accessed via segment, if we want to access userspace data
 universally everywhere with absolute addressing, make userspace data segment has
 base 0 with offset 0.
+** PROGRESS Find a way to calculate address of interrupt service routines, not hard code addressses
+*** DONE Create an array of 256 quad word, used as IDT
+CLOSED: [2015-10-15 Thu 15:07]
+Code:
+
+idt: times 256 dq 0 ; 256 entries
+*** DONE Create an array of function pointers to interrupt service routines
+CLOSED: [2015-10-15 Thu 15:07]
+*** DONE Create a NASM macro for each interrupt that push error code and IRQ number on stack 
+CLOSED: [2015-10-15 Thu 15:05]
+It's the two macros *isr_error_code* and *isr_no_error_code*.
+*** DONE Create a NASM macro for each interrupt to register itself to IDT
+CLOSED: [2015-10-15 Thu 15:08]
+It's the macro *install_isr*
+*** DONE Create a sample interrupt handler for an IRQ i.e. IRQ 0
+CLOSED: [2015-10-15 Thu 15:06]
+It's _isr0 in my code that does actual work.
+*** PROGRESS Select an appropriate ISR service rountines from array of ISRs and call it
 ** PROGRESS Program the 8256A PIC
 http://stanislavs.org/helppc/8259.html
-** Find a formula to calculate address of interrupt service routines, not hard code addressses
+*** Get it working
 ** Handlde division by 0 interrupt
 Current problem: it always returns to erroneous div instruction.
