@@ -13,7 +13,6 @@ jmp	main				; go to start
 
 %include "stdio.inc"			; basic i/o routines
 %include "gdt.inc"			; Gdt routines
-%include "idt.inc"
 %include "a20.inc"
 %include "disk16.inc"
 
@@ -45,20 +44,7 @@ main:
 
   mov	num_of_sectors, 2					; read 2 sector
 	mov	track_num, 0					; we are reading the 4th sector past us, so its still on track 0
-	mov	sector_num, 5					; sector to read (The 5th sector)
-	mov	head_num, 0					; head number
-	mov	drive_num, 0					; drive number. Remember Drive 0 is floppy drive.
-  mov	ah, 0x02			; read floppy sector function
-	int	0x13					; call BIOS - Read the sector
-
-	; userspace
-	mov	ax, 0x20FF
-	mov	es, ax
-	xor	bx, bx
-
-	mov	num_of_sectors, 2					; read 1 sector
-	mov	track_num, 0					; we are reading the 7th sector past us, so its still on track 0
-	mov	sector_num, 7					; sector to read (The 7th sector)
+	mov	sector_num, 4					; sector to read (The rth sector)
 	mov	head_num, 0					; head number
 	mov	drive_num, 0					; drive number. Remember Drive 0 is floppy drive.
   mov	ah, 0x02			; read floppy sector function
@@ -69,9 +55,22 @@ main:
 	mov	es, ax
 	xor	bx, bx
 
+	mov	num_of_sectors, 8					; read 8 sector
+	mov	track_num, 0					; we are reading the 9th sector past us, so its still on track 0
+	mov	sector_num, 6					; sector to read (The 9th sector)
+	mov	head_num, 0					; head number
+	mov	drive_num, 0					; drive number. Remember Drive 0 is floppy drive.
+  mov	ah, 0x02			; read floppy sector function
+	int	0x13					; call BIOS - Read the sector
+
+	; userspace
+	mov	ax, 0x30FF
+	mov	es, ax
+	xor	bx, bx
+
 	mov	num_of_sectors, 1					; read 1 sector
 	mov	track_num, 0					; we are reading the 9th sector past us, so its still on track 0
-	mov	sector_num, 9					; sector to read (The 9th sector)
+	mov	sector_num, 14					; sector to read (The 9th sector)
 	mov	head_num, 0					; head number
 	mov	drive_num, 0					; drive number. Remember Drive 0 is floppy drive.
   mov	ah, 0x02			; read floppy sector function
@@ -103,12 +102,6 @@ main:
 	;-------------------------------;
 
 	call	InstallGDT		; install our GDT
-
-	;-------------------------------;
-	;   Install our IDT		;
-	;-------------------------------;
-
-	call	InstallIDT		; install our GDT
 
 	;-------------------------------;
 	;   Go into pmode		;

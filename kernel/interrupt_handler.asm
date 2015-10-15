@@ -5,13 +5,17 @@ bits 32
 cmp ecx, 0
 je int_handler0
 
-cmp ecx, 1
-je int_handler1
-
-%include "stdio32.inc"
+jmp setup_isrs
 
 DivByZeroMsg  db "Divide by Zero", 0ah, 0h
 InterruptMsg  db "Calling from interrupt", 0ah, 0h
+
+%include "stdio32.inc"
+%include "idt.inc"
+
+setup_isrs:
+  call InstallIDT
+  retf
 
 int_handler0:
   mov bl, 0
@@ -23,6 +27,12 @@ int_handler0:
 
   mov al, 1
   mov dl, 1
+
+
+	; send EOI to primary PIC
+
+	mov	al, 0x20	; set bit 4 of OCW 2
+	out	0x20, al	; write to primary PIC command register
 
   jmp ireturn
 

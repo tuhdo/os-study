@@ -63,6 +63,9 @@ Sysenter_Entry:
   je test_intr_kernel_space
 
   cmp eax, 3
+  je test_intr_pic
+
+  cmp eax, 4
   je STOP
   ; mov eax, GoodbyeMsg
   ; call Puts32
@@ -85,6 +88,12 @@ Stage3:
 
   call sysenter_setup
 
+  ;-------------------------------;
+	;   Install our IDT		;
+	;-------------------------------;
+
+	call	0x30:0		; install our IDT
+
   call ClrScr32
 
   mov bl, 20
@@ -95,6 +104,7 @@ Stage3:
   call Puts32
 
   call MapPIC
+  call EnablePIC
 
   ; AMAZING
   ; Link to read for understanding: http://www.jamesmolloy.co.uk/tutorial_html/10.-User%20Mode.html
@@ -145,10 +155,10 @@ test_intr_kernel_space:
   ; int 1
 
   ; push syscall_exit
-  ; mov ecx, 0
-  ; mov ax, 3
-  ; mov dl, 0
-  ; div dl
+  mov ecx, 0
+  mov ax, 3
+  mov dl, 0
+  div dl
   ; mov	ax, 0x10		; set data segments to data selector (0x10)
   ; mov	ds, ax
 
@@ -158,6 +168,9 @@ test_intr_kernel_space:
 
   ; mov eax, InterruptMsg
   ; call Puts32
+  jmp syscall_exit
+
+test_intr_pic:
   jmp syscall_exit
 
 STOP:

@@ -179,7 +179,7 @@ loader:
 	mov si, read_fat_msg
 	call Print
 
-  mov	num_of_sectors, 3					; read 2 sector
+  mov	num_of_sectors, 2					; read 2 sector
 	mov	track_num, 0					; we are reading the second sector past us, so its still on track 0
 	mov	sector_num, 2					; sector to read (The second sector)
 	mov	head_num, 0					; head number
