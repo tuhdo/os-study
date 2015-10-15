@@ -7,9 +7,6 @@ je int_handler0
 
 jmp setup_isrs
 
-DivByZeroMsg  db "Divide by Zero", 0ah, 0h
-InterruptMsg  db "Calling from interrupt", 0ah, 0h
-
 %include "stdio32.inc"
 %include "idt.inc"
 

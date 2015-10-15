@@ -1,7 +1,11 @@
 idt: times 256 dq 0 ; 256 entries
 
+DivByZeroMsg  db "Divide by Zero", 0ah, 0h
+InterruptMsg  db "Calling from interrupt", 0ah, 0h
+
 isrs:
   dd _isr0
+  dd _isr1
 
 _isr0:
   mov bl, 0
@@ -13,6 +17,19 @@ _isr0:
 
   mov al, 1
   mov dl, 1
+  ret
+
+_isr1:
+  mov bl, 5
+  mov bh, 5
+  ; mov eax, MovCur
+  ; and eax, 0xFFFF
+  call MovCur
+
+  mov eax, InterruptMsg
+  ; and eax, 0xFFFF  ; retrieve offset only when base address is something different than 0
+  ; call 0x38:0x1008a
+  call Puts32
   ret
 
 
@@ -68,17 +85,19 @@ irq_common:
   mov es, ax
   mov fs, ax
   mov gs, ax
+
   popad
 
   mov ecx, [esp + 8]
   and ecx, 0xFFFF
   mov [esp + 8], ecx
 
+  ; remove error code and IRQ number from the stack to return
+  pop ecx
+  pop ecx
+
   mov al, 1
   mov dl, 1
-
-  pop ecx
-  pop ecx
 
   iret
 
@@ -142,7 +161,7 @@ InstallIDT:
   cli				; clear interrupts
 	pusha				; save registers
   install_isr 0
-  ; install_isr 1
+  install_isr 1
   ; install_isr 2
   ; install_isr 3
   ; install_isr 4
