@@ -65,7 +65,7 @@ gdt_data:
 	db 0				; base high
 
 	; video memory: 40  (0x28)
-	dw 0x07D0  										; limit
+	dw 0x7FFF  										; limit
 	dw 0x8000												; base low
 	db 0x0B												; base middle
 	db 11110010b
