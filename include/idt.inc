@@ -165,37 +165,37 @@ InstallIDT:
   install_isr 0
   install_isr 1
   install_isr 2
-  ; install_isr 3
-  ; install_isr 4
-  ; install_isr 5
-  ; install_isr 6
-  ; install_isr 7
-  ; install_isr 8
-  ; install_isr 9
-  ; install_isr 10
-  ; install_isr 11
-  ; install_isr 12
-  ; install_isr 13
-  ; install_isr 14
-  ; install_isr 15
-  ; install_isr 16
-  ; install_isr 17
-  ; install_isr 18
-  ; install_isr 19
-  ; install_isr 20
-  ; install_isr 21
-  ; install_isr 22
-  ; install_isr 23
-  ; install_isr 24
-  ; install_isr 25
-  ; install_isr 26
-  ; install_isr 27
-  ; install_isr 28
-  ; install_isr 29
-  ; install_isr 30
-  ; install_isr 31
-  ; install_isr 32
-  ; install_isr 33
+  install_isr 3
+  install_isr 4
+  install_isr 5
+  install_isr 6
+  install_isr 7
+  install_isr 8
+  install_isr 9
+  install_isr 10
+  install_isr 11
+  install_isr 12
+  install_isr 13
+  install_isr 14
+  install_isr 15
+  install_isr 16
+  install_isr 17
+  install_isr 18
+  install_isr 19
+  install_isr 20
+  install_isr 21
+  install_isr 22
+  install_isr 23
+  install_isr 24
+  install_isr 25
+  install_isr 26
+  install_isr 27
+  install_isr 28
+  install_isr 29
+  install_isr 30
+  install_isr 31
+  install_isr 32
+  install_isr 33
   lidt	[idt_ptr]			; load GDT into GDTR
   sti
   popa
