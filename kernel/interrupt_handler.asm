@@ -11,7 +11,9 @@ jmp setup_isrs
 %include "idt.inc"
 
 setup_isrs:
+  pushad
   call InstallIDT
+  popad
   retf
 
 int_handler0:
