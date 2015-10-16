@@ -209,7 +209,7 @@ InstallIDT:
 idt_end:
 
 idt_ptr:
-	.limit dw 8	; bits 0...15 is size of idt
+	.limit dw (256 * 8)	; bits 0...15 is size of idt
 	.base	dd idt		; base of idt
 
   ; load register with idt_ptr
