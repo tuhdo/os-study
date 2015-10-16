@@ -152,9 +152,9 @@ clrscr:
 
 test_intr_kernel_space:
   ; mov ecx, 1
-  ; int 1
+  int 1
 
-  ; push syscall_exit
+  ; ; push syscall_exit
   mov ecx, 0
   mov ax, 3
   mov dl, 0
