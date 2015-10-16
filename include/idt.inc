@@ -78,6 +78,7 @@ irq_common:
   add eax, ebx
   mov eax, [eax]
   and eax, 0xFFFF
+
   call eax
 
   pop eax        ; reload the original registers
@@ -140,6 +141,7 @@ isr_no_error_code 32
 isr_no_error_code 33
 
 %macro install_isr 1
+  xor eax, eax
   mov eax, %1
   mov bx, 8
   mul bx
@@ -162,7 +164,7 @@ InstallIDT:
 	pusha				; save registers
   install_isr 0
   install_isr 1
-  ; install_isr 2
+  install_isr 2
   ; install_isr 3
   ; install_isr 4
   ; install_isr 5
