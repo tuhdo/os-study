@@ -57,7 +57,7 @@ isr%1:
 ;; 6. Restore registers back to its original states.
 irq_common:
   xor ecx, ecx
-  mov cl, [esp + 4]            ; get IRQ number
+  mov cl, [esp]            ; get IRQ number
   pushad
 
   mov ax, ds               ; Lower 16-bits of eax = ds.
