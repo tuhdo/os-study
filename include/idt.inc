@@ -3,7 +3,8 @@ idt: times 256 dq 0 ; 256 entries
 DivByZeroMsg  db "Divide by Zero", 0ah, 0h
 InterruptMsg  db "Calling from interrupt", 0ah, 0h
 PicIntrMsg    db "Receive interrupt from PIC!", 0ah, 0h
-UnhandledMsg  db "Unhandled interrupt", 0ah, 0h
+UnhandledMsg  db "Unhandled interrupt: ",  0h
+IntNum        db "0", 0h
 
 isrs:
   dd _isr0
@@ -49,8 +50,11 @@ _irq_unhandled:
   mov eax, UnhandledMsg
   call Puts32
 
-  mov al, 1
-  mov dl, 1
+  add cl, 0x30
+  mov [IntNum], cl
+  mov eax, IntNum
+  call Puts32
+
   ret
 
 _isr0:
