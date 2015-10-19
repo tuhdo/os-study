@@ -126,5 +126,5 @@ Current problem: it always returns to erroneous div instruction.
 CLOSED: [2015-10-16 Fri 15:45]
 ** PROGRESS Program the 8256A PIC
 http://stanislavs.org/helppc/8259.html
-*** Get it working
-
+*** PROGRESS Get it working
+**** PROGRESS Program the PIT to test it
