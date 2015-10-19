@@ -1,8 +1,3 @@
-%define PRIMARY_PIC_COMMANDR 0x20
-%define SECONDARY_PIC_COMMANDR 0xA0
-%define PRIMARY_PIC_IMR 0x21
-%define SECONDARY_PIC_IMR 0xA1
-
 %define IRQ_0	0x20				; IRQs 0-7 mapped to use interrupts 0x20-0x27
 %define IRQ_8	0x28				; IRQs 8-15 mapped to use interrupts 0x28-0x36
 
@@ -27,38 +22,48 @@
 MapPIC:
   ; Setup ICW1
   mov al, (ICW1_SEND_IC4 | ICW1_PIC_INITIALIZED)
-  out PRIMARY_PIC_COMMANDR, al
-  out SECONDARY_PIC_COMMANDR, al
+  out 0x20, al
+  out 0xa0, al
 
   ; Setup ICW2
 	; send ICW 2 to primary PIC
-  ; the first 31 interrupts (0x0-0x1F) are reserved 
+  ; the first 31 interrupts (0x0-0x1F) are reserved
 	mov	al, IRQ_0		; Primary PIC handled IRQ 0..7. IRQ 0 is now mapped to interrupt number 0x20
-	out	PRIMARY_PIC_IMR, al
+	out	0x21, al
 
 	; send ICW 2 to secondary controller
 	mov	al, IRQ_8		; Secondary PIC handles IRQ's 8..15. IRQ 8 is now mapped to use interrupt 0x28
-	out	SECONDARY_PIC_IMR, al
+	out	0xa1, al
 
   ; Setup ICW3
-  mov al, 0x2                   ; 0x4 = 0100 Second bit (IR Line 2)
-  out PRIMARY_PIC_IMR, al  ; send to data register
+  mov al, 0x4                   ; 0x4 = 0100 Second bit (IR Line 2)
+  out 0x21, al  ; send to data register
 
   ; Send ICW 3 to secondary PIC
-	mov	al, 0x2		; 010=> IR line 2
-	out	0xA1, al	; write to data register of secondary PIC
+	mov	al, 0x2		; 0010=> IR line 2
+	out	0xa1, al	; write to data register of secondary PIC
 
   ; Setup ICW4
-	mov	al, 1		; bit 0 enables 80x86 mode
+	mov	al, 0x1		; bit 0 enables 80x86 mode
 
 	; send ICW 4 to both primary and secondary PICs
 	out	0x21, al
 	out	0xA1, al
 
   ; All done. Null out the data registers
-
 	mov	al, 0
-	out	PRIMARY_PIC_IMR, al
-	out	SECONDARY_PIC_IMR, al
+	out	0x21, al
+	out	0xa1, al
 
+  ; Disable all IRQs
+  mov al, 0xFF
+  out 0x21, al
+  out 0xA1, al
+
+  ret
+
+EnablePIC:
+  mov eax, 0x0
+  out 0x21, al
+  ; out 0xa1, al
   ret
