@@ -2,10 +2,56 @@ idt: times 256 dq 0 ; 256 entries
 
 DivByZeroMsg  db "Divide by Zero", 0ah, 0h
 InterruptMsg  db "Calling from interrupt", 0ah, 0h
+PicIntrMsg    db "Receive interrupt from PIC!", 0ah, 0h
+UnhandledMsg  db "Unhandled interrupt", 0ah, 0h
 
 isrs:
   dd _isr0
   dd _isr1
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _irq_unhandled
+  dd _isr32
+  dd _isr33
+
+_irq_unhandled:
+  mov bl, 10
+  mov bh, 5
+  call MovCur
+
+  mov eax, UnhandledMsg
+  call Puts32
+
+  mov al, 1
+  mov dl, 1
+  ret
 
 _isr0:
   mov bl, 0
@@ -32,6 +78,34 @@ _isr1:
   call Puts32
   ret
 
+_isr32:
+  mov bl, 5
+  mov bh, 15
+  ; mov eax, MovCur
+  ; and eax, 0xFFFF
+  call MovCur
+
+  mov eax, PicIntrMsg
+  ; and eax, 0xFFFF  ; retrieve offset only when base address is something different than 0
+  ; call 0x38:0x1008a
+  call Puts32
+
+  mov al, 0x20
+  out 0x20, al
+  ret
+
+_isr33:
+  mov bl, 5
+  mov bh, 5
+  ; mov eax, MovCur
+  ; and eax, 0xFFFF
+  call MovCur
+
+  mov eax, PicIntrMsg
+  ; and eax, 0xFFFF  ; retrieve offset only when base address is something different than 0
+  ; call 0x38:0x1008a
+  call Puts32
+  ret
 
 %macro isr_no_error_code 1
 [GLOBAL isr%1]
