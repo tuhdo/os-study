@@ -1,4 +1,4 @@
-idt: times 256 dq 0 ; 256 entries
+idt: times 256 dq 0.0 ; 256 entries
 
 DivByZeroMsg  db "Divide by Zero", 0ah, 0h
 InterruptMsg  db "Calling from interrupt", 0ah, 0h
