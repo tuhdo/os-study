@@ -109,6 +109,11 @@ _isr33:
   ; and eax, 0xFFFF  ; retrieve offset only when base address is something different than 0
   ; call 0x38:0x1008a
   call Puts32
+
+  ; send EOI to primary PIC
+
+	mov	al, 0x20	; set bit 4 of OCW 2
+	out	0x20, al	; write to primary PIC command register
   ret
 
 %macro isr_no_error_code 1
@@ -167,6 +172,9 @@ irq_common:
 
   popad
 
+  ; only use lower 16 bits, since we use segment in protected mode.
+  ; This is necessary because int instruction stores absolute address, while iret instruction use
+  ; segmented address.
   mov ecx, [esp + 8]
   and ecx, 0xFFFF
   mov [esp + 8], ecx
@@ -174,9 +182,6 @@ irq_common:
   ; remove error code and IRQ number from the stack to return
   pop ecx
   pop ecx
-
-  mov al, 1
-  mov dl, 1
 
   iret
 
@@ -278,13 +283,6 @@ InstallIDT:
   sti
   popa
   ret
-
-; idt_start:
-;   dw   0
-;   dw   0x30
-;   db   0
-;   db   11101110b
-;   dw   0
 
 idt_end:
 
