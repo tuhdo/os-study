@@ -17,6 +17,7 @@ jmp Stage3
 
 %include "stdio32.inc"
 %include "pic.inc"
+%include "pit.inc"
 
 WelcomeMsg db "Welcome to Tu's Operating System", 0ah, 0h
 InterruptMsg  db "Interrupting", 0ah, 0h
@@ -88,6 +89,10 @@ Stage3:
 
   call sysenter_setup
 
+  call MapPIC
+  call EnablePIT
+  ; call EnablePIC
+
   ;-------------------------------;
 	;   Install our IDT		;
 	;-------------------------------;
@@ -103,8 +108,8 @@ Stage3:
   mov eax, WelcomeMsg
   call Puts32
 
-  call MapPIC
-  call EnablePIC
+.loop:
+  jmp .loop
 
   ; AMAZING
   ; Link to read for understanding: http://www.jamesmolloy.co.uk/tutorial_html/10.-User%20Mode.html
