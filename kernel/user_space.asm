@@ -1,4 +1,4 @@
-org 0x30FF0
+org 0x40FF0
 
 USE32
 jmp Gate1
@@ -41,7 +41,7 @@ Stop:
 
 .stop3:
   mov eax, 3
-  mov ecx, .stop4
+  mov ecx, .stop3
   sysenter
 
 .stop4:

@@ -55,22 +55,22 @@ main:
 	mov	es, ax
 	xor	bx, bx
 
-	mov	num_of_sectors, 10					; read 8 sector
+	mov	num_of_sectors, 12					; read 15 sector
 	mov	track_num, 0					; we are reading the 9th sector past us, so its still on track 0
-	mov	sector_num, 6					; sector to read (The 9th sector)
+	mov	sector_num, 6				; sector to read (The 9th sector)
 	mov	head_num, 0					; head number
 	mov	drive_num, 0					; drive number. Remember Drive 0 is floppy drive.
   mov	ah, 0x02			; read floppy sector function
 	int	0x13					; call BIOS - Read the sector
 
 	; userspace
-	mov	ax, 0x30FF
+	mov	ax, 0x40FF
 	mov	es, ax
 	xor	bx, bx
 
 	mov	num_of_sectors, 1					; read 1 sector
 	mov	track_num, 0					; we are reading the 9th sector past us, so its still on track 0
-	mov	sector_num, 16					; sector to read (The 9th sector)
+	mov	sector_num, 18					; sector to read (The 9th sector)
 	mov	head_num, 0					; head number
 	mov	drive_num, 0					; drive number. Remember Drive 0 is floppy drive.
   mov	ah, 0x02			; read floppy sector function
@@ -89,7 +89,7 @@ main:
 	mov	ss, ax
 
 	mov	sp, 0xFFFF
-	sti				; enable interrupts
+	; sti				; enable interrupts
 
 	;-------------------------------;
 	;   Print loading message	;
