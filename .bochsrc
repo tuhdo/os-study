@@ -10,4 +10,5 @@ floppya: 1_44="/home/tuhdo/workspace/study/os-study/disk.dsk", status=inserted  
  
 log:         OSDev.log             # All errors and info logs will output to OSDev.log
 error:       action=report 
-info:        action=report
+info:        action=reportinfo:        action=report
+debug:       action=ignore, pic=report
