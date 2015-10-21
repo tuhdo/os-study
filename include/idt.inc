@@ -114,7 +114,7 @@ _isr33:
   ; and eax, 0xFFFF
   call MovCur
 
-  mov eax, PicIntrMsg
+  mov eax, InterruptMsg
   ; and eax, 0xFFFF  ; retrieve offset only when base address is something different than 0
   ; call 0x38:0x1008a
   call Puts32
