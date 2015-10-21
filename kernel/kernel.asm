@@ -50,10 +50,14 @@ sysenter_setup:
   ret
 
 Sysenter_Entry:
+  ; VERY IMPORTANT if we want interrupt to function, since sysenter clear IF bit
+  ; in EFLAGS register.
+  sti
   mov		bx, 0x10		; set data segments to data selector (0x10)
   mov		ds, bx
 	; sysenter jumps here, is is executing this code at prividege level 0. Simular to Call Gates, normally we will
 	; provide a single entry point for all system calls.
+
   cmp eax, 0
   je clrscr
 
@@ -108,8 +112,8 @@ Stage3:
   mov eax, WelcomeMsg
   call Puts32
 
-.loop:
-  jmp .loop
+; .loop:
+;   jmp .loop
 
   ; AMAZING
   ; Link to read for understanding: http://www.jamesmolloy.co.uk/tutorial_html/10.-User%20Mode.html
