@@ -51,12 +51,12 @@ MapPIC:
 	out	0xA1, al
 
   ; All done. Null out the data registers
-	mov	al, 0
-	out	0x21, al
-	out	0xa1, al
+	; mov	al, 0
+	; out	0x21, al
+	; out	0xa1, al
 
-  ; Disable all IRQs
-  mov al, 0xfb
+  ; Disable all IRQs, except timer and keyboard
+  mov al, 0xfc
   out 0x21, al
   out 0xA1, al
 
