@@ -183,6 +183,8 @@ irq_common:
   pop ecx
   pop ecx
 
+  sti
+
   iret
 
 ;; with error code
