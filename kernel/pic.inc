@@ -56,7 +56,7 @@ MapPIC:
 	out	0xa1, al
 
   ; Disable all IRQs
-  mov al, 0xfe
+  mov al, 0xfb
   out 0x21, al
   out 0xA1, al
 
