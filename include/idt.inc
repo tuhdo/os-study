@@ -2,7 +2,7 @@ idt: times 256 dq 0.0 ; 256 entries
 
 DivByZeroMsg  db "Divide by Zero", 0ah, 0h
 InterruptMsg  db "Calling from interrupt", 0ah, 0h
-PicIntrMsg    db "Receive interrupt from PIC!", 0ah, 0h
+PicIntrMsg    db "Receive timer interrupt from PIC!", 0ah, 0h
 UnhandledMsg  db "Unhandled interrupt: ",  0h
 IntNum        db "0", 0h
 
@@ -41,6 +41,15 @@ isrs:
   dd _irq_unhandled
   dd _isr32
   dd _isr33
+  dd _isr32
+  dd _isr33
+  dd _isr32
+  dd _isr33
+  dd _isr32
+  dd _isr33
+  dd _isr32
+  dd _isr33
+  dd _isr32
 
 _irq_unhandled:
   mov bl, 10
@@ -123,6 +132,7 @@ isr%1:
   push byte 0
   push byte %1
   jmp irq_common
+  xchg bx, bx
 %endmacro
 
 %macro isr_error_code 1
@@ -224,6 +234,15 @@ isr_no_error_code 29
 isr_no_error_code 31
 isr_no_error_code 32
 isr_no_error_code 33
+isr_no_error_code 34
+isr_no_error_code 35
+isr_no_error_code 36
+isr_no_error_code 37
+; isr_no_error_code 38
+; isr_no_error_code 39
+; isr_no_error_code 40
+; isr_no_error_code 41
+; isr_no_error_code 42
 
 %macro install_isr 1
   xor eax, eax
@@ -281,6 +300,15 @@ InstallIDT:
   install_isr 31
   install_isr 32
   install_isr 33
+  install_isr 34
+  install_isr 35
+  install_isr 36
+  install_isr 37
+  ; install_isr 38
+  ; install_isr 39
+  ; install_isr 40
+  ; install_isr 41
+  ; install_isr 42
   lidt	[idt_ptr]			; load GDT into GDTR
   sti
   popa
@@ -289,7 +317,7 @@ InstallIDT:
 idt_end:
 
 idt_ptr:
-	.limit dw (256 * 8)	; bits 0...15 is size of idt
+	.limit dw (256 * 8) - 1	; bits 0...15 is size of idt
 	.base	dd idt		; base of idt
 
   ; load register with idt_ptr
