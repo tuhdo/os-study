@@ -92,6 +92,7 @@ Puts32:
   pusha
   ; Print a character at a time
 .loop_Puts32:
+  ; remember to always use selector:offset for it to work in both real and protected mode
   cmp byte [ds:eax], 0
   je .done_Puts32
   mov bl, [ds:eax]
