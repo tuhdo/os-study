@@ -124,7 +124,18 @@ as:
 CLOSED: [2015-10-16 Fri 15:45]
 Current problem: it always returns to erroneous div instruction.
 CLOSED: [2015-10-16 Fri 15:45]
-** PROGRESS Program the 8256A PIC
+** DONE Program the 8256A PIC
+CLOSED: [2015-10-26 Mon 18:03]
 http://stanislavs.org/helppc/8259.html
-*** PROGRESS Get it working
-**** PROGRESS Program the PIT to test it
+*** DONE Get it working
+CLOSED: [2015-10-26 Mon 18:03]
+*sysenter* disables IF bit in EFLAGS. Must use *sti* instruction to reenable
+ interrupts or nothing happens. 
+
+My SO question and own answer: [[http://stackoverflow.com/questions/33244011/why-isnt-my-isr-for-irq0-8253-timer-interrupt-from-the-8259-executed/33253487?noredirect=1#comment54371466_33253487][Why isn't my ISR for IRQ0 (8253 Timer Interrupt)
+from the 8259 executed?]]
+**** DONE Program the PIT to test it
+CLOSED: [2015-10-26 Mon 18:03]
+** PROGRESS Memory management
+*** PROGRESS Get memory size
+*** PROGRESS Get memory map
