@@ -87,11 +87,10 @@ endstruc
 ;---------------------------------------------
 ;	Get memory map from bios
 ;	/in es:di->destination buffer for entries
-;	/ret bp=entry count
+;	/ret eax=entry count
 ;---------------------------------------------
 BiosGetMemoryMap:
-	pushad
-	xor	ebx, ebx
+  xor	ebx, ebx
 	xor	bp, bp			; number of entries stored here
 	mov	edx, 'PAMS'		; 'SMAP'
 	mov	eax, 0xe820
@@ -126,7 +125,7 @@ BiosGetMemoryMap:
 .error:
 	stc                           ; set CF in EFLAGS register
 .done:
-	popad
+  mov eax, ebp
 	ret
 
 struc multiboot_info
