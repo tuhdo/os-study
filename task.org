@@ -136,6 +136,23 @@ My SO question and own answer: [[http://stackoverflow.com/questions/33244011/why
 from the 8259 executed?]]
 **** DONE Program the PIT to test it
 CLOSED: [2015-10-26 Mon 18:03]
-** PROGRESS Memory management
-*** PROGRESS Get memory size
-*** PROGRESS Get memory map
+** PROGRESS Physical Memory Manager
+*** DONE Get memory size in BIOS and pass to the kernel
+CLOSED: [2015-10-28 Wed 13:12]
+*** DONE Get memory map in BIOS and pass to the kernel
+CLOSED: [2015-10-28 Wed 13:12]
+*** PROGRESS Get total number of available memory in the kernel
+*** TODO Calculate the total number of 4k memory blocks
+*** TODO Create a memory bit map as an array of integers
+*** TODO Create a function for setting a bit in memory bit map
+*** TODO Create a function for unsetting a bit in memory bit map
+*** TODO Create a function for testing a whether a bit is already set
+*** TODO Creaet a function for initializing physical memory manager
+*** TODO Create a function for allocating a memory block
+*** TODO Create a function for freeing a memory block
+*** TODO Create a function for allocating many memory blocks
+*** TODO Create a function for freeing many memory blocks
+*** TODO Create a function for retrieving first free block
+*** TODO Create a function for initializing a region of memory of a specific size to be available for use
+Smallest memory unit is a block.
+*** TODO Create a function for deintializing a region of memory of a specific size not to be used
