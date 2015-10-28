@@ -15,6 +15,7 @@ jmp Stage3
   ;******************************************************
   ; Welcome to the 32 bit world!
 
+%include "mm.inc"
 %include "stdio32.inc"
 %include "pic.inc"
 %include "pit.inc"
@@ -22,6 +23,9 @@ jmp Stage3
 WelcomeMsg db "Welcome to Tu's Operating System", 0ah, 0h
 InterruptMsg  db "Interrupting", 0ah, 0h
 GoodbyeMsg db "See ya later", 0ah, 0h
+TotalMemMsg db "Total number of memory: ", 0h
+TotalMem   times 100 db "0", 0h
+boot_info  dd 0
 
 %define IA32_SYSENTER_CS 0x174
 %define IA32_SYSENTER_ESP 0x175
@@ -81,6 +85,9 @@ syscall_exit:
   sysexit
 
 Stage3:
+  ; get boot_info from BIOS
+  pop ecx
+
   ;-------------------------------;
   ;   Set registers		;
   ;-------------------------------;
@@ -91,19 +98,37 @@ Stage3:
   mov		esp, 90000h		; stack begins from 90000h
   mov   edi, 0xFFFFFFFF         ; test 32 bit
 
+  call ClrScr32
+
+  mov bl, 0
+  mov bh, 1
+  call MovCur
+
+  mov eax, TotalMemMsg
+  call Puts32
+
+  mov [boot_info], ecx
+  mov ecx, [boot_info]
+  mov eax, [ecx + multiboot_info.memoryLo]
+  mov ebx, [ecx + multiboot_info.memoryHi]
+  ; xchg bx, bx
+  call get_total_memory
+
+  mov ebx, TotalMem
+  call NumberToString
+  mov eax, TotalMem
+  call Puts32
+
   call sysenter_setup
 
   call MapPIC
   call EnablePIT
-  ; call EnablePIC
 
   ;-------------------------------;
 	;   Install our IDT		;
 	;-------------------------------;
 
 	call	0x30:0		; install our IDT
-
-  call ClrScr32
 
   mov bl, 20
   mov bh, 5
@@ -161,13 +186,13 @@ clrscr:
 
 test_intr_kernel_space:
   ; mov ecx, 1
-  int 1
+  ; int 1
 
   ; ; push syscall_exit
-  mov ecx, 0
-  mov ax, 3
-  mov dl, 0
-  div dl
+  ; mov ecx, 0
+  ; mov ax, 3
+  ; mov dl, 0
+  ; div dl
   ; mov	ax, 0x10		; set data segments to data selector (0x10)
   ; mov	ds, ax
 
@@ -185,4 +210,3 @@ test_intr_pic:
 STOP:
   cli
   hlt
-

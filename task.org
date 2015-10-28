@@ -141,7 +141,8 @@ CLOSED: [2015-10-26 Mon 18:03]
 CLOSED: [2015-10-28 Wed 13:12]
 *** DONE Get memory map in BIOS and pass to the kernel
 CLOSED: [2015-10-28 Wed 13:12]
-*** PROGRESS Get total number of available memory in the kernel
+*** DONE Get total number of available memory in the kernel
+CLOSED: [2015-10-28 Wed 17:10]
 *** TODO Calculate the total number of 4k memory blocks
 *** TODO Create a memory bit map as an array of integers
 *** TODO Create a function for setting a bit in memory bit map

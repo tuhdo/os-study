@@ -1,3 +1,5 @@
+bits 32
+
 _CurX db 5
 _CurY db 5
 
@@ -6,12 +8,47 @@ _CurY db 5
 %define LINES         25
 %define CHAR_ATTRIB   15
 
-  ;**************************************************;
-  ;	Putch32 ()
-  ;		- Prints a character to screen
-  ;	BL => Character to print
-  ;**************************************************;
+; eax: number to convert
+; ebx: buffer to store
+NumberToString:
+  xchg bx, bx
+  ; number length
+  mov ecx, 0
 
+  ; divide by 10
+.loop_convert:
+  xor edx, edx
+  mov ebp, 10
+  div ebp
+
+  ; add 0x30 to the remainder EDX to convert it into an ASCII character represents a number
+  add edx, 0x30
+
+  ; push EDX onto the stack
+  push edx
+
+  ; use the quotient and repeat until the quotient becomes 0
+  inc ecx
+  cmp eax, 0
+  jne .loop_convert
+
+  ; pop the stack into buffer
+  mov edx, 0
+.loop_store:
+  pop eax
+  mov [ebx + edx], eax
+  inc edx
+  cmp edx, ecx
+  jne .loop_store
+  mov byte [ebx + edx], 0x0
+
+  ret
+
+;**************************************************;
+;	Putch32 ()
+;		- Prints a character to screen
+;	BL => Character to print
+;**************************************************;
 Putch32:
   pusha				; save registers
   ; mov	edi, VIDMEM		; get pointer to video memory, not working after entering userspace (ring 3)

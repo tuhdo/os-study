@@ -179,8 +179,7 @@ main:
 	; In this case, we define that our code segment (and selector) starts from
 	; 0x10000 (with a limit of 0xFFFF, so code segment only lasts upto 0x1FFFF)
 	; and we load the kernel at 0x10FF0, so the offset is 0xFF0.
-	xchg bx, bx
-	push dword boot_info
+  push dword boot_info
 	jmp	08h:0xFF0
 
 	; Note: Do NOT re-enable interrupts! Doing so will triple fault!
