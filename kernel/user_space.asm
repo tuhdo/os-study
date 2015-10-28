@@ -14,10 +14,10 @@ Gate1:
 	sysenter
 
 Stop:
-  mov eax, 0
-  mov ecx, esp
-  mov edx, .stop1
-  sysenter
+  ; mov eax, 0
+  ; mov ecx, esp
+  ; mov edx, .test_intr_user_space
+  ; sysenter
 
 .stop1:
   ; mov ecx, 0
@@ -42,7 +42,8 @@ Stop:
 
 .stop3:
   mov eax, 3
-  mov ecx, .stop3
+  mov ecx, esp
+  mov edx, .stop4
   sysenter
 
 .stop4:
