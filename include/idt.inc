@@ -132,7 +132,7 @@ isr%1:
   push byte 0
   push byte %1
   jmp irq_common
-  xchg bx, bx
+  ; xchg bx, bx
 %endmacro
 
 %macro isr_error_code 1

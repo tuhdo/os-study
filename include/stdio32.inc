@@ -11,7 +11,7 @@ _CurY db 5
 ; eax: number to convert
 ; ebx: buffer to store
 NumberToString:
-  xchg bx, bx
+  ; xchg bx, bx
   ; number length
   mov ecx, 0
 
