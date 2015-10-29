@@ -23,9 +23,6 @@ jmp Stage3
 WelcomeMsg db "Welcome to Tu's Operating System", 0ah, 0h
 InterruptMsg  db "Interrupting", 0ah, 0h
 GoodbyeMsg db "See ya later", 0ah, 0h
-TotalMemMsg db "Total number of memory: ", 0h
-TotalMem   times 100 db "0", 0h
-boot_info  dd 0
 
 %define IA32_SYSENTER_CS 0x174
 %define IA32_SYSENTER_ESP 0x175
@@ -100,24 +97,8 @@ Stage3:
 
   call ClrScr32
 
-  mov bl, 0
-  mov bh, 1
-  call MovCur
-
-  mov eax, TotalMemMsg
-  call Puts32
-
-  mov [boot_info], ecx
-  mov ecx, [boot_info]
-  mov eax, [ecx + multiboot_info.memoryLo]
-  mov ebx, [ecx + multiboot_info.memoryHi]
-  ; xchg bx, bx
-  call get_total_memory
-
-  mov ebx, TotalMem
-  call NumberToString
-  mov eax, TotalMem
-  call Puts32
+  mov eax, ecx
+  call mem_report
 
   call sysenter_setup
 
