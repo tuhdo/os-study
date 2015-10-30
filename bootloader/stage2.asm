@@ -69,9 +69,9 @@ main:
 	mov	es, ax
 	xor	bx, bx
 
-  mov	num_of_sectors, 2					; read 2 sector
+  mov	num_of_sectors, 15					; read 15 sector
 	mov	track_num, 0					; we are reading the 4th sector past us, so its still on track 0
-	mov	sector_num, 4					; sector to read (The rth sector)
+	mov	sector_num, 4					; sector to read (The 4th sector)
 	mov	head_num, 0					; head number
 	mov	drive_num, 0					; drive number. Remember Drive 0 is floppy drive.
   mov	ah, 0x02			; read floppy sector function
@@ -83,9 +83,9 @@ main:
 	xor	bx, bx
 
 	mov	num_of_sectors, 12					; read 15 sector
-	mov	track_num, 0					; we are reading the 9th sector past us, so its still on track 0
-	mov	sector_num, 6				; sector to read (The 9th sector)
-	mov	head_num, 0					; head number
+	mov	track_num, 0					; we are reading the 19th sector past us, so its still on track 1
+	mov	sector_num, 1				; sector to read (The 19th sector)
+	mov	head_num, 1					; head number
 	mov	drive_num, 0					; drive number. Remember Drive 0 is floppy drive.
   mov	ah, 0x02			; read floppy sector function
 	int	0x13					; call BIOS - Read the sector
@@ -97,8 +97,8 @@ main:
 
 	mov	num_of_sectors, 1					; read 1 sector
 	mov	track_num, 0					; we are reading the 9th sector past us, so its still on track 0
-	mov	sector_num, 18					; sector to read (The 9th sector)
-	mov	head_num, 0					; head number
+	mov	sector_num, 13					; sector to read (The 9th sector)
+	mov	head_num, 1					; head number
 	mov	drive_num, 0					; drive number. Remember Drive 0 is floppy drive.
   mov	ah, 0x02			; read floppy sector function
 	int	0x13					; call BIOS - Read the sector
