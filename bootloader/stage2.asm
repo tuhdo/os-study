@@ -141,7 +141,7 @@ main:
 
   mov edi, 0x2000
 	call BiosGetMemoryMap
-	mov word [boot_info+multiboot_info.mmap_length], ax
+  mov word [boot_info+multiboot_info.mmap_length], ax
 	mov word [boot_info+multiboot_info.mmap_addr], 0x2000
 
 	;-------------------------------;

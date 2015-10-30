@@ -111,8 +111,8 @@ Stage3:
 
 	call	0x30:0		; install our IDT
 
-  mov bl, 20
-  mov bh, 5
+  mov bl, 0
+  mov bh, 24
   call MovCur
 
   mov eax, WelcomeMsg
@@ -149,8 +149,8 @@ monitor_out:
   ; mov		ax, 0x10		; set data segments to data selector (0x10)
   ; mov		ds, ax
 
-  mov bl, 20
-  mov bh, 10
+  mov bl, 0
+  mov bh, 25
   call MovCur
 
   mov eax, GoodbyeMsg

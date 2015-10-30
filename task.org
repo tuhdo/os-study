@@ -145,8 +145,9 @@ CLOSED: [2015-10-28 Wed 13:12]
 CLOSED: [2015-10-28 Wed 17:10]
 *** DONE Calculate the total number of 4k memory blocks
 CLOSED: [2015-10-29 Thu 15:33]
-*** PROGRESS Get and print the memory maps
-*** TODO Create a memory bit map as an array of integers
+*** DONE Get and print the memory maps
+CLOSED: [2015-10-30 Fri 18:35]
+*** PROGRESS Create a memory bit map as an array of integers
 *** TODO Create a function for setting a bit in memory bit map
 *** TODO Create a function for unsetting a bit in memory bit map
 *** TODO Create a function for testing a whether a bit is already set

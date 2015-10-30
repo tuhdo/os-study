@@ -5,10 +5,19 @@ bits 32
 
 %include "mem_info.inc"
 
+mmap_baseAddress_lbl db "Base Address: ", 0h
+mmap_length_lbl db "Length: ", 0h
+mmap_type_lbl db "Type: ", 0h
+
+mmap_type1_msg db "Available Memory", 0h
+mmap_type2_msg db "Reserved", 0h
+mmap_type3_msg db "ACPI Reclaim Memory", 0h
+mmap_type4_msg db "ACPI NVS Memory", 0h
+
 TotalMemMsg db "Total number of memory: ", 0h
 TotalBlockMsg db "Total number of blocks: ", 0h
 Buffer times 100 db "0", 0h
-TotalMem db 0
+TotalMem dd 0
 boot_info  dd 0
 
 mem_total dd 0
@@ -49,12 +58,16 @@ mem_report:
   mov eax, [TotalMem]
   call get_total_block_count
 
-  xchg bx, bx
   mov [mem_block_total], eax
   mov ebx, Buffer
   call NumberToString
   mov eax, Buffer
   call Puts32
+
+  mov ecx, [boot_info]
+  mov eax, [ecx + multiboot_info.mmap_addr]
+  mov ebx, [ecx + multiboot_info.mmap_length]
+  call report_memory_map
 
   ret
 
@@ -91,4 +104,58 @@ get_total_block_count:
   mov ecx, BLOCK_SIZE
   div ecx
 
+  ret
+
+%macro print_mmap_entry 1
+  push edi
+  push ecx
+  push ebx
+  push eax
+
+  mov bl, 0
+  mov bh, cl
+  call MovCur
+
+  mov eax, mmap_%1_lbl
+  call Puts32
+
+  mov eax, [esp]
+  add eax, MemoryMapEntry.%1
+  mov eax, [eax]
+  mov ebx, Buffer
+  call NumberToString
+
+  mov eax, Buffer
+  call Puts32
+  pop eax
+  pop ebx
+  pop ecx
+  pop edi
+%endmacro
+
+; eax: mmap address
+; ebx: number of mmap
+report_memory_map:
+  xchg bx, bx
+  ; substract ebx by 1
+  ; if ebx is 0, quit; else, get next entry
+  mov ecx, 3                    ; y coordinate
+.loop:
+  ; print relevant information
+  print_mmap_entry baseAddress
+  inc ecx
+  print_mmap_entry length
+  inc ecx
+  xchg bx, bx
+  print_mmap_entry type
+  inc ecx
+
+  ; get memory map at index i (starting from 0)
+  add eax, 24
+  dec ebx
+  xchg bx, bx
+  cmp ebx, 0
+  je .done
+  jmp .loop
+.done:
   ret
