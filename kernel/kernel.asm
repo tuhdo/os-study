@@ -2,6 +2,9 @@ org 0x10FF0
 
 bits 32
 
+kernel_heap times 700 dq 0.0
+  kernel_stack dq 0
+
 jmp Stage3
   ; Print green background
 
@@ -10,10 +13,10 @@ jmp Stage3
   ; mov bl, 0ffh
   ; int 0x10
 
-  ;******************************************************
-  ;	ENTRY POINT FOR STAGE 3
-  ;******************************************************
-  ; Welcome to the 32 bit world!
+;******************************************************
+;	ENTRY POINT FOR STAGE 3
+;******************************************************
+; Welcome to the 32 bit world!
 
 %include "mm.inc"
 %include "stdio32.inc"
