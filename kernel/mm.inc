@@ -5,9 +5,11 @@ bits 32
 
 %include "mem_info.inc"
 
+mmap_lbl db 0ah, "Physical memory map: ", 0ah, 0h
 mmap_baseAddress_lbl db "Base Address: ", 0h
-mmap_length_lbl db "Length: ", 0h
-mmap_type_lbl db "Type: ", 0h
+mmap_length_lbl db "length: ", 0h
+mmap_type_lbl db "type: ", 0h
+mmap_info_separator db ", ", 0h
 
 mmap_type1_msg db "Available Memory", 0h
 mmap_type2_msg db "Reserved", 0h
@@ -64,6 +66,11 @@ mem_report:
   mov eax, Buffer
   call Puts32
 
+  mov bl, 0
+  mov bh, 3
+  call MovCur
+  mov eax, mmap_lbl
+  call Puts32
   mov ecx, [boot_info]
   mov eax, [ecx + multiboot_info.mmap_addr]
   mov ebx, [ecx + multiboot_info.mmap_length]
@@ -112,7 +119,7 @@ get_total_block_count:
   push ebx
   push eax
 
-  mov bl, 0
+  mov bl, [_CurX]
   mov bh, cl
   call MovCur
 
@@ -127,6 +134,7 @@ get_total_block_count:
 
   mov eax, Buffer
   call Puts32
+
   pop eax
   pop ebx
   pop ecx
@@ -139,14 +147,20 @@ report_memory_map:
   xchg bx, bx
   ; substract ebx by 1
   ; if ebx is 0, quit; else, get next entry
-  mov ecx, 3                    ; y coordinate
+  mov ecx, [_CurY]                    ; y coordinate
 .loop:
   ; print relevant information
+  mov [_CurX], byte 0
   print_mmap_entry baseAddress
-  inc ecx
+  push eax
+  mov eax, mmap_info_separator
+  call Puts32
+  pop eax
   print_mmap_entry length
-  inc ecx
-  xchg bx, bx
+  push eax
+  mov eax, mmap_info_separator
+  call Puts32
+  pop eax
   print_mmap_entry type
   inc ecx
 
