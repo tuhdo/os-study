@@ -120,7 +120,6 @@ Putch32:
 	;-------------------------------;
 	;   Restore registers & return  ;
 	;-------------------------------;
-
 .done:
 	popa				; restore registers and return
 	ret
