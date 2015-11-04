@@ -2,9 +2,6 @@ org 0x10FF0
 
 bits 32
 
-kernel_heap times 700 dq 0.0
-  kernel_stack dq 0
-
 jmp Stage3
   ; Print green background
 
@@ -102,6 +99,9 @@ Stage3:
 
   mov eax, ecx
   call mem_report
+
+  mov eax, 9
+  call mem_set
 
   call sysenter_setup
 

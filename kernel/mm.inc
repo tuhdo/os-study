@@ -3,8 +3,6 @@ bits 32
 %define BLOCK_PER_BYTE 8
 %define BLOCK_SIZE 4096
 
-%include "mem_info.inc"
-
 mmap_lbl db 0ah, "Physical memory map: ", 0ah, 0h
 mmap_baseAddress_lbl db "Base Address: ", 0h
 mmap_length_lbl db "length: ", 0h
@@ -25,7 +23,17 @@ boot_info  dd 0
 mem_total dd 0
 mem_block_total dd 0
 mem_block_used dd 0
-mem_block_array dd 0
+; we might support up to 4GB:
+; 4GB = 2^32 = 4294967296 bytes
+; 4294967296 / 4096 = 1048576 (blocks)
+; 1048576 / 8 = 131072 bytes for bit masking all blocks
+; since each byte can carry 8 bits corressponding to 8 blocks
+; For now, just support 100MB maximum:
+mem_block_array times 3200 db 0
+
+%include "mem_info.inc"
+; mem_init
+mem_init:
 
 ; eax: boot_info
 mem_report:
@@ -98,6 +106,8 @@ get_total_memory:
   add eax, ebx
   add eax, 1024*1024            ; add the first 1MB to get the total memory size
 
+  mov [mem_total], eax
+
   ret
 
 ; eax: total number of memory
@@ -144,7 +154,7 @@ get_total_block_count:
 ; eax: mmap address
 ; ebx: number of mmap
 report_memory_map:
-  xchg bx, bx
+  ; xchg bx, bx
   ; substract ebx by 1
   ; if ebx is 0, quit; else, get next entry
   mov ecx, [_CurY]                    ; y coordinate
@@ -167,9 +177,35 @@ report_memory_map:
   ; get memory map at index i (starting from 0)
   add eax, 24
   dec ebx
-  xchg bx, bx
+  ; xchg bx, bx
   cmp ebx, 0
   je .done
   jmp .loop
 .done:
   ret
+
+; eax: block number to be set in bitmap array
+mem_set:
+  xchg bx, bx
+  xor edx, edx
+  mov ecx, 8
+  div ecx
+
+  mov cl, 7
+  sub cl, dl
+
+  mov edx, 1
+  shl edx, cl
+
+  or [mem_block_array + eax], dl
+
+  ret
+
+; eax: block number to be cleared in bitmap array
+mem_unset:
+
+; eax: block number to be tested in bitmap array
+mem_test:
+
+; eax: abosolute address to convert to block
+mem_address_to_block:
