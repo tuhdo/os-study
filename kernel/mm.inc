@@ -184,8 +184,7 @@ report_memory_map:
 .done:
   ret
 
-; eax: block number to be set in bitmap array
-mem_set:
+%macro find_block_pos 1
   xor edx, edx
   mov ecx, 8
   div ecx
@@ -194,7 +193,17 @@ mem_set:
   sub cl, dl
 
   mov edx, 1
+
+  ; mem_test doesn't need this shift
+  %if %1 == 1
+  ; to shift, cl register is a must
   shl edx, cl
+  %endif
+%endmacro
+
+; eax: block number to be set in bitmap array
+mem_set:
+  find_block_pos 1
 
   or [mem_block_array + eax], dl
 
@@ -202,23 +211,23 @@ mem_set:
 
 ; eax: block number to be unset
 mem_unset:
-  xchg bx, bx
-  xor edx, edx
-  mov ecx, 8
-  div ecx
-
-  mov cl, 7
-  sub cl, dl
-
-  mov edx, 1
-  shl edx, cl
+  find_block_pos 1
 
   xor [mem_block_array + eax], dl
 
   ret
 
-; eax: block number to be tested in bitmap array
+; eax: block number to be checked in bitmap array
 mem_test:
+  xchg bx, bx
+  find_block_pos 0
+
+  mov eax, [mem_block_array + eax]
+  ; to perform a shift, cl register is a must in x86 arch
+  shr eax, cl
+  and eax, 1
+
+  ret
 
 ; eax: abosolute address to convert to block
-mem_address_to_block:
+; mem_address_to_block:
