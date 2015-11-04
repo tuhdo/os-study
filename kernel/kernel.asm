@@ -100,8 +100,17 @@ Stage3:
   mov eax, ecx
   call mem_report
 
+  ; set block 9 in use
   mov eax, 9
   call mem_set
+
+  ; set block 8 in use
+  mov eax, 8
+  call mem_set
+
+  ; unset block 9
+  mov eax, 9
+  call mem_unset
 
   call sysenter_setup
 

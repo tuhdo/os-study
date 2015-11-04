@@ -186,7 +186,6 @@ report_memory_map:
 
 ; eax: block number to be set in bitmap array
 mem_set:
-  xchg bx, bx
   xor edx, edx
   mov ecx, 8
   div ecx
@@ -201,8 +200,22 @@ mem_set:
 
   ret
 
-; eax: block number to be cleared in bitmap array
+; eax: block number to be unset
 mem_unset:
+  xchg bx, bx
+  xor edx, edx
+  mov ecx, 8
+  div ecx
+
+  mov cl, 7
+  sub cl, dl
+
+  mov edx, 1
+  shl edx, cl
+
+  xor [mem_block_array + eax], dl
+
+  ret
 
 ; eax: block number to be tested in bitmap array
 mem_test:

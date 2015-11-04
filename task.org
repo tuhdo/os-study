@@ -153,8 +153,9 @@ Just hard code it instead of calculate precise size at runtime, since even
 supporting 4GB, it only costs ~131 KB anyway.
 *** DONE Create a function for setting a bit in memory bit map
 CLOSED: [2015-11-04 Wed 11:59]
-*** PROGRESS Create a function for unsetting a bit in memory bit map
-*** TODO Create a function for testing a whether a bit is already set
+*** DONE Create a function for unsetting a bit in memory bit map
+CLOSED: [2015-11-04 Wed 14:05]
+*** PROGRESS Create a function for testing a whether a bit is already set
 *** TODO Creaet a function for initializing physical memory manager
 *** TODO Create a function for allocating a memory block
 *** TODO Create a function for freeing a memory block
