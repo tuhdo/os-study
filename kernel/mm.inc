@@ -1,6 +1,6 @@
 bits 32
 
-%define BLOCK_PER_BYTE 8
+%define BLOCKS_PER_BYTE 8
 %define BLOCK_SIZE 4096
 
 mmap_lbl db 0ah, "Physical memory map: ", 0ah, 0h
@@ -16,29 +16,61 @@ mmap_type4_msg db "ACPI NVS Memory", 0h
 
 TotalMemMsg db "Total number of memory: ", 0h
 TotalBlockMsg db "Total number of blocks: ", 0h
-Buffer times 100 db "0", 0h
-TotalMem dd 0
+buffer times 100 db "0", 0h
 boot_info  dd 0
 
-mem_total dd 0
-mem_block_total dd 0
-mem_block_used dd 0
+mmap_total dd 0
+mmap_block_total dd 0
+mmap_block_used dd 0
 ; we might support up to 4GB:
 ; 4GB = 2^32 = 4294967296 bytes
 ; 4294967296 / 4096 = 1048576 (blocks)
 ; 1048576 / 8 = 131072 bytes for bit masking all blocks
 ; since each byte can carry 8 bits corressponding to 8 blocks
 ; For now, just support 100MB maximum:
-mem_block_array times 3200 db 0
+mmap_block_array times 3200 db 0
 
 %include "mem_info.inc"
-; mem_init
-mem_init:
+%include "memory.inc"
+
+; mmap_init
+; eax: boot_info
+phys_mem_manager_init:
+  mov [boot_info], eax
+  ; get and print toal number of available memory
+  mov ecx, [boot_info]
+  mov eax, [ecx + multiboot_info.memoryLo]
+  mov ebx, [ecx + multiboot_info.memoryHi]
+
+  ; get total memory and store it
+  call get_total_memory
+  mov [mmap_total], eax
+  call get_total_block_count
+  mov [mmap_block_total], eax
+
+  ; print memory info on screen
+  call mmap_report
+
+  ; set block 9 in use
+  mov eax, 9
+  call mmap_set ; becomes 0x40 in mmap_block_array index 1
+
+  ; set block 8 in use
+  mov eax, 8
+  call mmap_set ; become 0xc0 in mmap_block_array index 1
+
+  ; unset block 9
+  mov eax, 9
+  call mmap_unset ; become 0x40 in mmap_block_array index 1
+
+  ; test block 8 set
+  mov eax, 8
+  call mmap_test ; return 1 in eax
+
+  ret
 
 ; eax: boot_info
-mem_report:
-  mov [boot_info], eax
-
+mmap_report:
   mov bl, 0
   mov bh, 1
   call MovCur
@@ -46,17 +78,10 @@ mem_report:
   mov eax, TotalMemMsg
   call Puts32
 
-  ; get and print toal number of available memory
-  mov ecx, [boot_info]
-  mov eax, [ecx + multiboot_info.memoryLo]
-  mov ebx, [ecx + multiboot_info.memoryHi]
-  ; xchg bx, bx
-  call get_total_memory
-
-  mov [TotalMem], eax
-  mov ebx, Buffer
+  mov eax, [mmap_total]
+  mov ebx, buffer
   call NumberToString
-  mov eax, Buffer
+  mov eax, buffer
   call Puts32
 
   ; get and print total number of blocks
@@ -65,13 +90,11 @@ mem_report:
   call MovCur
   mov eax, TotalBlockMsg
   call Puts32
-  mov eax, [TotalMem]
-  call get_total_block_count
 
-  mov [mem_block_total], eax
-  mov ebx, Buffer
+  mov eax, [mmap_block_total]
+  mov ebx, buffer
   call NumberToString
-  mov eax, Buffer
+  mov eax, buffer
   call Puts32
 
   mov bl, 0
@@ -83,6 +106,18 @@ mem_report:
   mov eax, [ecx + multiboot_info.mmap_addr]
   mov ebx, [ecx + multiboot_info.mmap_length]
   call report_memory_map
+
+  xchg bx, bx
+  ; by default, treat all memory in used
+  xor edx, edx
+  mov eax, [mmap_block_total]
+  mov ecx, BLOCKS_PER_BYTE
+  div ecx
+
+  mov ecx, eax
+  mov eax, mmap_block_array
+  mov ebx, 0xff
+  call memset
 
   ret
 
@@ -105,8 +140,6 @@ get_total_memory:
   pop ebx
   add eax, ebx
   add eax, 1024*1024            ; add the first 1MB to get the total memory size
-
-  mov [mem_total], eax
 
   ret
 
@@ -139,10 +172,10 @@ get_total_block_count:
   mov eax, [esp]
   add eax, MemoryMapEntry.%1
   mov eax, [eax]
-  mov ebx, Buffer
+  mov ebx, buffer
   call NumberToString
 
-  mov eax, Buffer
+  mov eax, buffer
   call Puts32
 
   pop eax
@@ -194,7 +227,7 @@ report_memory_map:
 
   mov edx, 1
 
-  ; mem_test doesn't need this shift
+  ; mmap_test doesn't need this shift
   %if %1 == 1
   ; to shift, cl register is a must
   shl edx, cl
@@ -202,27 +235,27 @@ report_memory_map:
 %endmacro
 
 ; eax: block number to be set in bitmap array
-mem_set:
+mmap_set:
   find_block_pos 1
 
-  or [mem_block_array + eax], dl
+  or [mmap_block_array + eax], dl
 
   ret
 
 ; eax: block number to be unset
-mem_unset:
+mmap_unset:
   find_block_pos 1
 
-  xor [mem_block_array + eax], dl
+  xor [mmap_block_array + eax], dl
 
   ret
 
 ; eax: block number to be checked in bitmap array
-mem_test:
-  xchg bx, bx
+mmap_test:
+  ; xchg bx, bx
   find_block_pos 0
 
-  mov eax, [mem_block_array + eax]
+  mov eax, [mmap_block_array + eax]
   ; to perform a shift, cl register is a must in x86 arch
   shr eax, cl
   and eax, 1
@@ -230,4 +263,4 @@ mem_test:
   ret
 
 ; eax: abosolute address to convert to block
-; mem_address_to_block:
+mmap_address_to_block:

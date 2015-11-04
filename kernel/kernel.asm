@@ -98,23 +98,7 @@ Stage3:
   call ClrScr32
 
   mov eax, ecx
-  call mem_report
-
-  ; set block 9 in use
-  mov eax, 9
-  call mem_set ; becomes 0x40 in mem_block_array index 1
-
-  ; set block 8 in use
-  mov eax, 8
-  call mem_set ; become 0xc0 in mem_block_array index 1
-
-  ; unset block 9
-  mov eax, 9
-  call mem_unset ; become 0x40 in mem_block_array index 1
-
-  ; test block 8 set
-  mov eax, 8
-  call mem_test ; return 1 in eax
+  call phys_mem_manager_init
 
   call sysenter_setup
 

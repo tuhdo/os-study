@@ -157,8 +157,11 @@ CLOSED: [2015-11-04 Wed 11:59]
 CLOSED: [2015-11-04 Wed 14:05]
 *** DONE Create a function for testing a whether a bit is already set
 CLOSED: [2015-11-04 Wed 14:34]
-*** PROGRESS Create a function for initializing physical memory manager
-*** TODO Create a function for allocating a memory block
+*** DONE Create *memset* function to set a region of memory to a value
+CLOSED: [2015-11-04 Wed 15:20]
+*** DONE Create a function for initializing physical memory manager
+CLOSED: [2015-11-04 Wed 15:21]
+*** PROGRESS Create a function for allocating a memory block
 *** TODO Create a function for freeing a memory block
 *** TODO Create a function for allocating many memory blocks
 *** TODO Create a function for freeing many memory blocks
