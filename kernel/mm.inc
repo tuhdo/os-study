@@ -67,6 +67,15 @@ phys_mem_manager_init:
   mov eax, 8
   call mmap_test ; return 1 in eax
 
+  ; test block 8 set with mmap_is_address_reserved
+  xchg bx, bx
+  mov eax, 32678
+  call mmap_is_address_reserved
+
+  ; test block 9 set with mmap_is_address_reserved
+  mov eax, 36864
+  call mmap_is_address_reserved
+
   ret
 
 ; eax: boot_info
@@ -107,7 +116,7 @@ mmap_report:
   mov ebx, [ecx + multiboot_info.mmap_length]
   call report_memory_map
 
-  xchg bx, bx
+  ; xchg bx, bx
   ; by default, treat all memory in used
   xor edx, edx
   mov eax, [mmap_block_total]
@@ -262,5 +271,24 @@ mmap_test:
 
   ret
 
+; returns address of first free block in eax
+mmap_first_free_block:
+  
+  ret
+
+; eax: address to test
+; returns 1 if it is, or 0 if not in eax
+mmap_is_address_reserved:
+  call mmap_address_to_block
+  call mmap_test
+
+  ret
+
 ; eax: abosolute address to convert to block
 mmap_address_to_block:
+  ; divide the memory address by block size
+  xor edx, edx
+  mov ecx, BLOCK_SIZE
+  div ecx
+
+  ret

@@ -161,11 +161,11 @@ CLOSED: [2015-11-04 Wed 14:34]
 CLOSED: [2015-11-04 Wed 15:20]
 *** DONE Create a function for initializing physical memory manager
 CLOSED: [2015-11-04 Wed 15:21]
+*** DONE Create a function for testing memory block of an address already reserved
+CLOSED: [2015-11-05 Thu 11:22]
+*** PROGRESS Create a function for retrieving first free block
 *** PROGRESS Create a function for allocating a memory block
-*** TODO Create a function for freeing a memory block
-*** TODO Create a function for allocating many memory blocks
-*** TODO Create a function for freeing many memory blocks
-*** TODO Create a function for retrieving first free block
-*** TODO Create a function for initializing a region of memory of a specific size to be available for use
 Smallest memory unit is a block.
-*** TODO Create a function for deintializing a region of memory of a specific size not to be used
+*** TODO Create a function for freeing a memory block
+*** TODO Create a function for allocating many memory blocks, based on size and address supplied
+*** TODO Create a function for freeing many memory blocks, based on size and address supplied
