@@ -14,6 +14,8 @@ mmap_type2_msg db "Reserved", 0h
 mmap_type3_msg db "ACPI Reclaim Memory", 0h
 mmap_type4_msg db "ACPI NVS Memory", 0h
 
+block_allocate_msg db "Block allocated at: ", 0h
+out_of_mem_msg db "Out of memory", 0h
 TotalMemMsg db "Total number of memory: ", 0h
 TotalBlockMsg db "Total number of blocks: ", 0h
 buffer times 100 db "0", 0h
@@ -105,7 +107,30 @@ phys_mem_manager_init:
   mov ebx, 0xff
   call memset
 
+  ; xchg bx, bx
   call mmap_first_free_block ; should retrieve 10, since first 9 bits are set
+
+  ; test allocating when we can still have free bits in bitmap array
+  ; xchg bx, bx
+  call mmap_allocate_block
+
+  push eax
+  mov bl, 0
+  mov bh, [_CurY]
+  inc bh
+  call MovCur
+  mov eax, block_allocate_msg
+  call Puts32
+  pop eax
+  mov ebx, buffer
+  call NumberToString
+  push eax
+  mov eax, buffer
+  call Puts32
+  pop eax
+
+  ; test freeing allocated memory above
+  call mmap_free_block
 
   ; xchg bx, bx
   ; by default, treat all memory in used
@@ -118,6 +143,13 @@ phys_mem_manager_init:
   mov eax, mmap_block_array
   mov ebx, 0xff
   call memset
+
+  ; test freeing allocated memory above
+  mov eax, 200
+  call mmap_free_block
+
+  ; test when we have no memory to allocate
+  call mmap_allocate_block
 
   ret
 
@@ -276,6 +308,8 @@ report_memory_map:
 
 ; eax: block number to be set in bitmap array
 mmap_set:
+  inc byte [mmap_block_used]
+
   find_block_pos 1
 
   or [mmap_block_array + eax], dl
@@ -284,6 +318,8 @@ mmap_set:
 
 ; eax: block number to be unset
 mmap_unset:
+  sub byte [mmap_block_used], 1
+
   find_block_pos 1
 
   xor [mmap_block_array + eax], dl
@@ -352,4 +388,71 @@ mmap_address_to_block:
   mov ecx, BLOCK_SIZE
   div ecx
 
+  ret
+
+; returns allocated address in eax
+mmap_allocate_block:
+  ; check if used blocks are equal to free blocks
+  call mmap_is_block_available
+
+  cmp eax, 0
+  jle .error
+  ; find first free block
+  ; xchg bx, bx
+  call mmap_first_free_block
+
+  ; set it
+  push eax
+  call mmap_set
+  pop eax
+
+  ; calculate physical address of the block
+  mov edx, BLOCK_SIZE
+  mul edx
+
+  jmp .done
+
+.error:
+  mov bl, 0
+  mov bh, [_CurY]
+  inc bh
+  call MovCur
+
+  push eax
+  mov eax, out_of_mem_msg
+  call Puts32
+  pop eax
+
+.done:
+  ret
+
+; eax: address to free block that contains it
+mmap_free_block:
+  ; xchg bx, bx
+  xor edx, edx
+  mov ecx, BLOCK_SIZE
+  div ecx
+
+  call mmap_unset
+
+  ret
+
+mmap_is_block_available:
+  ; xchg bx, bx
+  xor edx, edx
+  mov eax, [mmap_block_total]
+  mov ecx, BLOCKS_PER_BYTE
+  div ecx
+
+  cmp edx, 0
+  je .loop
+  inc eax
+.loop:
+  sub eax, 1
+  mov ebx, mmap_block_array
+  mov edx, [ebx + eax]
+  and edx, 0xff
+  cmp edx, 0xff
+  je .loop
+.done:
   ret

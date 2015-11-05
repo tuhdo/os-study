@@ -165,8 +165,10 @@ CLOSED: [2015-11-04 Wed 15:21]
 CLOSED: [2015-11-05 Thu 11:22]
 *** DONE Create a function for retrieving first free block
 CLOSED: [2015-11-05 Thu 13:45]
-*** PROGRESS Create a function for allocating a memory block
+*** DONE Create a function for allocating a memory block
+CLOSED: [2015-11-05 Thu 15:45]
 Smallest memory unit is a block.
-*** TODO Create a function for freeing a memory block
+*** DONE Create a function for freeing a memory block
+CLOSED: [2015-11-05 Thu 15:45]
 *** TODO Create a function for allocating many memory blocks, based on size and address supplied
 *** TODO Create a function for freeing many memory blocks, based on size and address supplied
