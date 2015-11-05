@@ -163,7 +163,8 @@ CLOSED: [2015-11-04 Wed 15:20]
 CLOSED: [2015-11-04 Wed 15:21]
 *** DONE Create a function for testing memory block of an address already reserved
 CLOSED: [2015-11-05 Thu 11:22]
-*** PROGRESS Create a function for retrieving first free block
+*** DONE Create a function for retrieving first free block
+CLOSED: [2015-11-05 Thu 13:45]
 *** PROGRESS Create a function for allocating a memory block
 Smallest memory unit is a block.
 *** TODO Create a function for freeing a memory block

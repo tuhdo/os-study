@@ -67,14 +67,57 @@ phys_mem_manager_init:
   mov eax, 8
   call mmap_test ; return 1 in eax
 
-  ; test block 8 set with mmap_is_address_reserved
-  xchg bx, bx
+  ; test block 8 set with mmap_is_address_in_reserved_block
+  ; xchg bx, bx
   mov eax, 32678
-  call mmap_is_address_reserved
+  call mmap_is_address_in_reserved_block
 
-  ; test block 9 set with mmap_is_address_reserved
+  ; test block 9 set with mmap_is_address_in_reserved_block
   mov eax, 36864
-  call mmap_is_address_reserved
+  call mmap_is_address_in_reserved_block
+
+  ; set block 0 in use
+  ; xchg bx, bx
+  mov eax, 0
+  call mmap_set ; becomes 0x01 in mmap_block_array index 0
+
+  ; set block 1 in use
+  mov eax, 1
+  call mmap_set ; becomes 0x03 in mmap_block_array index 0
+
+  ; set block 2 in use
+  mov eax, 2
+  call mmap_set ; becomes 0x03 in mmap_block_array index 0
+
+  ; test first free block
+  ; xchg bx, bx
+  call mmap_first_free_block ; should retrieve 3, right next to the first 2 bits above
+
+  ; xchg bx, bx
+  ; by default, treat all memory in used
+  xor edx, edx
+  mov eax, [mmap_block_total]
+  mov ecx, BLOCKS_PER_BYTE
+  div ecx
+
+  mov ecx, 1
+  mov eax, mmap_block_array
+  mov ebx, 0xff
+  call memset
+
+  call mmap_first_free_block ; should retrieve 10, since first 9 bits are set
+
+  ; xchg bx, bx
+  ; by default, treat all memory in used
+  xor edx, edx
+  mov eax, [mmap_block_total]
+  mov ecx, BLOCKS_PER_BYTE
+  div ecx
+
+  mov ecx, eax
+  mov eax, mmap_block_array
+  mov ebx, 0xff
+  call memset
 
   ret
 
@@ -115,18 +158,6 @@ mmap_report:
   mov eax, [ecx + multiboot_info.mmap_addr]
   mov ebx, [ecx + multiboot_info.mmap_length]
   call report_memory_map
-
-  ; xchg bx, bx
-  ; by default, treat all memory in used
-  xor edx, edx
-  mov eax, [mmap_block_total]
-  mov ecx, BLOCKS_PER_BYTE
-  div ecx
-
-  mov ecx, eax
-  mov eax, mmap_block_array
-  mov ebx, 0xff
-  call memset
 
   ret
 
@@ -273,12 +304,42 @@ mmap_test:
 
 ; returns address of first free block in eax
 mmap_first_free_block:
-  
+  ; loop the mmap_block_array, find the first bit that is 0
+  mov ebx, 0
+.loop_byte:
+  mov eax, mmap_block_array
+  add eax, ebx
+
+  ; start from checking bit 0 in each bitmap byte
+  mov ecx, 0
+  ; checking bit by bit
+.loop_bit:
+  mov edx, 0x80
+  shr edx, cl
+  and edx, [eax]
+  inc ecx  ; prepare for next bit after checking
+  cmp edx, 0
+  je .done_byte
+  cmp ecx, 8
+  jne .loop_bit
+.done_bit:
+  inc ebx
+  cmp ebx, mmap_block_total
+  jne .loop_byte
+.done_byte:
+  ; ebx holds index in mmap_block_array, store it in eax and calculate
+  ; eax * 8
+  mov eax, ebx
+  mov ebx, BLOCKS_PER_BYTE
+  mul ebx
+
+  ; add the offset
+  add eax, ecx
   ret
 
 ; eax: address to test
 ; returns 1 if it is, or 0 if not in eax
-mmap_is_address_reserved:
+mmap_is_address_in_reserved_block:
   call mmap_address_to_block
   call mmap_test
 
