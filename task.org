@@ -172,3 +172,8 @@ Smallest memory unit is a block.
 CLOSED: [2015-11-05 Thu 15:45]
 *** TODO Create a function for allocating many memory blocks, based on size and address supplied
 *** TODO Create a function for freeing many memory blocks, based on size and address supplied
+* Impediments
+** WAITING Investigate why interrupt handling only works when we first divide by 0
+- State "DONE"       from "WAITING"    [2015-11-06 Fri 17:44]
+  Wait until I finish keyboard controller programming. For now, just divide by 0
+  first, as a workaround.
