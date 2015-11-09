@@ -55,7 +55,8 @@ CLOSED: [2015-10-05 Mon 18:28]
 - Create a va_arg to access current argument in argument list. We must supply a
   type for correct return the argument with appropriate type as well as
   advancing AP pointer to the correct position of the next argument.
-* PROGRESS Interrupt
+* DONE Interrupt
+CLOSED: [2015-11-09 Mon 14:50]
 [[http://stackoverflow.com/questions/3425085/the-difference-between-call-gate-interrupt-gate-trap-gate][The difference between Call Gate, Interrupt Gate, Trap Gate?]]
 ** DONE Build an IDT for one interrupt and able to jump to it
 CLOSED: [2015-10-05 Mon 18:29]
@@ -136,44 +137,68 @@ My SO question and own answer: [[http://stackoverflow.com/questions/33244011/why
 from the 8259 executed?]]
 **** DONE Program the PIT to test it
 CLOSED: [2015-10-26 Mon 18:03]
-** PROGRESS Physical Memory Manager
-*** DONE Get memory size in BIOS and pass to the kernel
+* WAITING Physical Memory Manager
+- State "WAITING"    from "DONE"       [2015-11-09 Mon 14:50] \\
+  Wait until we finish virtual memory manager.
+** DONE Get memory size in BIOS and pass to the kernel
 CLOSED: [2015-10-28 Wed 13:12]
-*** DONE Get memory map in BIOS and pass to the kernel
+** DONE Get memory map in BIOS and pass to the kernel
 CLOSED: [2015-10-28 Wed 13:12]
-*** DONE Get total number of available memory in the kernel
+** DONE Get total number of available memory in the kernel
 CLOSED: [2015-10-28 Wed 17:10]
-*** DONE Calculate the total number of 4k memory blocks
+** DONE Calculate the total number of 4k memory blocks
 CLOSED: [2015-10-29 Thu 15:33]
-*** DONE Get and print the memory maps
+** DONE Get and print the memory maps
 CLOSED: [2015-10-30 Fri 18:35]
-*** DONE Create a memory bit map as an array of integers
+** DONE Create a memory bit map as an array of integers
 CLOSED: [2015-11-02 Mon 17:22]
 Just hard code it instead of calculate precise size at runtime, since even
 supporting 4GB, it only costs ~131 KB anyway.
-*** DONE Create a function for setting a bit in memory bit map
+** DONE Create a function for setting a bit in memory bit map
 CLOSED: [2015-11-04 Wed 11:59]
-*** DONE Create a function for unsetting a bit in memory bit map
+** DONE Create a function for unsetting a bit in memory bit map
 CLOSED: [2015-11-04 Wed 14:05]
-*** DONE Create a function for testing a whether a bit is already set
+** DONE Create a function for testing a whether a bit is already set
 CLOSED: [2015-11-04 Wed 14:34]
-*** DONE Create *memset* function to set a region of memory to a value
+** DONE Create *memset* function to set a region of memory to a value
 CLOSED: [2015-11-04 Wed 15:20]
-*** DONE Create a function for initializing physical memory manager
+** DONE Create a function for initializing physical memory manager
 CLOSED: [2015-11-04 Wed 15:21]
-*** DONE Create a function for testing memory block of an address already reserved
+** DONE Create a function for testing memory block of an address already reserved
 CLOSED: [2015-11-05 Thu 11:22]
-*** DONE Create a function for retrieving first free block
+** DONE Create a function for retrieving first free block
 CLOSED: [2015-11-05 Thu 13:45]
-*** DONE Create a function for allocating a memory block
+** DONE Create a function for allocating a memory block
 CLOSED: [2015-11-05 Thu 15:45]
 Smallest memory unit is a block.
-*** DONE Create a function for freeing a memory block
+** DONE Create a function for freeing a memory block
 CLOSED: [2015-11-05 Thu 15:45]
-*** TODO Create a function for allocating many memory blocks, based on size and address supplied
-*** TODO Create a function for freeing many memory blocks, based on size and address supplied
+** WAITING Create a function for allocating many memory blocks, based on size and address supplied
+- State "WAITING"    from "DONE"       [2015-11-09 Mon 14:50] \\
+  Come back when we finish virtual memory.
+- State "DONE"       from "WAITING"    [2015-11-09 Mon 14:50]
+** WAITING Create a function for freeing many memory blocks, based on size and address supplied
+- State "WAITING"    from "DONE"       [2015-11-09 Mon 14:49] \\
+  Come back when we finish virtual memory.
+* PROGRESS Virtual memory manager
+** TODO Create a struct of a page table entry
+** TODO Create attribute maskings of a page table entry
+** TODO Create a variable that represents a page table with 1024 entries
+** TODO Create a struct represents attributes of a page directory table
+** TODO Cteate a page directory table that contains addresses of 1024 page tables
+** TODO Implement pt_entry_set_attrib function
+The function set a bit in a page table entry.
+** TODO Implement pt_entry_unset_attrib
+** TODO Implement pt_entry_set_frame
+** TODO Implement pt_entry_is_present
+** TODO Implement pt_entry_is_writable
+** TODO Implement pt_entry_get_pfn
+Returns page frame number of a page.
+** TODO Implement virtual to physical address translation
 * Impediments
-** WAITING Investigate why interrupt handling only works when we first divide by 0
-- State "DONE"       from "WAITING"    [2015-11-06 Fri 17:44]
-  Wait until I finish keyboard controller programming. For now, just divide by 0
-  first, as a workaround.
+** DONE Investigate why interrupt handling only works when we first divide by 0
+CLOSED: [2015-11-09 Mon 12:12]
+Wait until I finish keyboard controller programming. For now, just divide by 0
+first, as a workaround.
+** TODO Find out how to write EFLAGS register with popf properly
+Currently, the top of the stack is not written to EFLAGS register properly.
