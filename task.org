@@ -182,6 +182,7 @@ CLOSED: [2015-11-05 Thu 15:45]
   Come back when we finish virtual memory.
 * PROGRESS Virtual memory manager
 ** TODO Create a struct of a page table entry
+Remember that bit 12-31 is frame address, not individual byte address.
 ** TODO Create attribute maskings of a page table entry
 ** TODO Create a variable that represents a page table with 1024 entries
 ** TODO Create a struct represents attributes of a page directory table
