@@ -189,5 +189,4 @@ test_intr_pic:
   jmp syscall_exit
 
 STOP:
-  cli
   hlt
