@@ -162,7 +162,7 @@ monitor_out:
   jmp syscall_exit
 
 clrscr:
-  call ClrScr32
+  ; call ClrScr32
   jmp syscall_exit
 
 test_intr_kernel_space:
@@ -189,4 +189,6 @@ test_intr_pic:
   jmp syscall_exit
 
 STOP:
+  ; call ClrScr32
+  cli
   hlt
