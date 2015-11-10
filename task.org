@@ -181,12 +181,17 @@ CLOSED: [2015-11-05 Thu 15:45]
 - State "WAITING"    from "DONE"       [2015-11-09 Mon 14:49] \\
   Come back when we finish virtual memory.
 * PROGRESS Virtual memory manager
-** TODO Create a struct of a page table entry
+** DONE Create a struct of a page table entry
+CLOSED: [2015-11-10 Tue 14:49]
 Remember that bit 12-31 is frame address, not individual byte address.
-** TODO Create attribute maskings of a page table entry
-** TODO Create a variable that represents a page table with 1024 entries
-** TODO Create a struct represents attributes of a page directory table
-** TODO Cteate a page directory table that contains addresses of 1024 page tables
+** DONE Create attribute maskings of a page table entry
+CLOSED: [2015-11-10 Tue 14:49]
+** DONE Create a variable that represents a page table with 1024 entries
+CLOSED: [2015-11-10 Tue 16:13]
+** DONE Create a struct represents attributes of a page directory table
+CLOSED: [2015-11-10 Tue 16:16]
+** DONE Cteate a page directory table that contains addresses of 1024 page tables
+CLOSED: [2015-11-10 Tue 16:16]
 ** TODO Implement pt_entry_set_attrib function
 The function set a bit in a page table entry.
 ** TODO Implement pt_entry_unset_attrib
