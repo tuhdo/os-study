@@ -192,9 +192,10 @@ CLOSED: [2015-11-10 Tue 16:13]
 CLOSED: [2015-11-10 Tue 16:16]
 ** DONE Cteate a page directory table that contains addresses of 1024 page tables
 CLOSED: [2015-11-10 Tue 16:16]
-** TODO Implement pt_entry_set_attrib function
+** DONE Implement pt_entry_set_attrib function
+CLOSED: [2015-11-12 Thu 16:37]
 The function set a bit in a page table entry.
-** TODO Implement pt_entry_unset_attrib
+** PROGRESS Implement pt_entry_unset_attrib
 ** TODO Implement pt_entry_set_frame
 ** TODO Implement pt_entry_is_present
 ** TODO Implement pt_entry_is_writable

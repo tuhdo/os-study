@@ -1,4 +1,12 @@
+org 0x50000
+
 bits 32
+
+cmp edi, 0
+jmp vmm_test
+
+cmp edi, 1
+jmp pt_entry_set_attr
 
 %define PTE_PRESENT       0x1
 %define PTE_WRITEABLE     0x2
@@ -26,3 +34,35 @@ bits 32
 
 pt times 1024 dd 0
 pdt times 1024 dd 0
+
+vmm_test:
+  xchg bx, bx
+  mov eax, pt
+  mov ebx, PTE_PRESENT | PTE_WRITEABLE | PTE_USER
+  call pt_entry_set_attr
+
+  ret
+
+; eax: address to an entry
+; ebx: attribute bits to set
+pt_entry_set_attr:
+  mov ecx, 0
+  and [eax], ecx
+  or [eax], ebx
+  ret
+
+pt_entry_unset_attr:
+  
+  ret
+
+pt_entry_set_frame:
+  ret
+
+pt_entry_is_present:
+  ret
+
+pt_entry_is_writable:
+  ret
+
+pt_entry_get_pfn:
+  ret

@@ -100,6 +100,10 @@ Stage3:
   mov eax, ecx
   call phys_mem_manager_init
 
+  xchg bx, bx
+  mov edi, 0
+  call 0x40:0
+
   call sysenter_setup
 
   call MapPIC
@@ -117,9 +121,6 @@ Stage3:
 
   mov eax, WelcomeMsg
   call Puts32
-
-; .loop:
-;   jmp .loop
 
   ; AMAZING
   ; Link to read for understanding: http://www.jamesmolloy.co.uk/tutorial_html/10.-User%20Mode.html
