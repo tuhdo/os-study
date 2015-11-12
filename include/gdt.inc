@@ -88,6 +88,14 @@ gdt_data:
 	db 11001111b			; granularity
 	db 0				; base high
 
+	; Virtual memory code region: 64 (0x40)
+  dw 0FFFFh				; limit low
+	dw 0				; base low
+	db 0x05					; base middle
+	db 10011010b			; access
+	db 11001111b			; granularity
+	db 0				; base high
+
 	; End of the GDT. Define the routine wherever
 	; The call gate routine
 

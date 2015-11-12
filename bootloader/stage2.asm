@@ -95,10 +95,23 @@ main:
 	mov	es, ax
 	xor	bx, bx
 
-	mov	num_of_sectors, 1					; read 1 sector
+	mov	num_of_sectors, 6					; read 1 sector
 	mov	track_num, 0					; we are reading the 9th sector past us, so its still on track 0
 	mov	sector_num, 13					; sector to read (The 9th sector)
 	mov	head_num, 1					; head number
+	mov	drive_num, 0					; drive number. Remember Drive 0 is floppy drive.
+  mov	ah, 0x02			; read floppy sector function
+	int	0x13					; call BIOS - Read the sector
+
+	; virtual memory manager code
+	mov	ax, 0x5000
+	mov	es, ax
+	xor	bx, bx
+
+	mov	num_of_sectors, 18					; read 1 sector
+	mov	track_num, 1					; we are reading the 9th sector past us, so its still on track 0
+	mov	sector_num, 1					; sector to read (The 9th sector)
+	mov	head_num, 0					; head number
 	mov	drive_num, 0					; drive number. Remember Drive 0 is floppy drive.
   mov	ah, 0x02			; read floppy sector function
 	int	0x13					; call BIOS - Read the sector
