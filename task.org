@@ -195,13 +195,19 @@ CLOSED: [2015-11-10 Tue 16:16]
 ** DONE Implement pt_entry_set_attrib function
 CLOSED: [2015-11-12 Thu 16:37]
 The function set a bit in a page table entry.
-** PROGRESS Implement pt_entry_unset_attrib
-** TODO Implement pt_entry_set_frame
-** TODO Implement pt_entry_is_present
-** TODO Implement pt_entry_is_writable
-** TODO Implement pt_entry_get_pfn
+** DONE Implement pt_entry_unset_attrib
+CLOSED: [2015-11-13 Fri 16:42]
+** DONE Implement pt_entry_set_frame
+CLOSED: [2015-11-13 Fri 16:42]
+** DONE Implement pt_entry_is_present
+CLOSED: [2015-11-13 Fri 16:42]
+** DONE Implement pt_entry_is_writable
+CLOSED: [2015-11-13 Fri 16:42]
+** DONE Implement pt_entry_get_pfn
+CLOSED: [2015-11-13 Fri 16:42]
 Returns page frame number of a page.
-** TODO Implement virtual to physical address translation
+** PROGRESS Implement virtual to physical address translation
+** TODO Activate paging in CR2 register
 * Impediments
 ** DONE Investigate why interrupt handling only works when we first divide by 0
 CLOSED: [2015-11-09 Mon 12:12]
