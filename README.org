@@ -1,0 +1,41 @@
+My simple educational OS for learning purpose. It is bootable in Bochs Emulator,
+by a virtual flobby disk created by the Makefile, *disk.dsk*. A big thanks to
+[[http://www.brokenthorn.com/Resources/OSDevIndex.html][Broken Thorn's OS Development series]]. I must say, this is the best free document
+for learning how to actually write an OS, not just learning about the concepts,
+or being confined in some assignment framework where many things are already
+done and you fill in function body. Although the core material is good overall,
+some important content is missing and you have to figure it out on your own,
+otherwise you will get stuck forever. When it comes to code, you are also on
+your own. The code example is fine, but many are outdated (because newer nasm)
+or missing important parts. You have to fix it yourself, if you want to proceed
+through the series. But, this is a good thing to me; I consider this a chance
+for exercising. I believed you truly understand something when you actually
+work on it, not just being spoon fed. I learned so much from this.
+
+* Current state
+The OS does not have a file system, because I want to leave it later. So,
+different parts of the OS is hard coded in the virtual flobby disk by sectors.
+For example, the kernel is allocated with 15 sectors, interrupt handling code is
+allocated with 12 sectors and so on. You can check in the target *boot.dsk* in
+the Makefile.
+
+- Bootloader (first 512 bytes in Master Boot Record)
+- Second stage bootloader
+- Basic VGA text output.
+- Kernel space code (ring 0)
+  It includes code + data descriptor in Global Descriptor Table.
+- Interrupts handling code: currently handles CPU exceptions (i.e. dividie by 0), PIC interrupts.
+- Userspace code (ring 3): code + data descriptor in Global Descriptor Table.
+- Getting memory informaton: total number of memory and system memory map.
+- Virtual memory managment (in progress).
+
+Demo:
+
+[[file:os-screenshot.jpg][file:os-screenshot.jpg]]
+
+* Future
+- Input with keyboard
+- Shell
+- DMA
+- File system
+- Port the kernel part to C
