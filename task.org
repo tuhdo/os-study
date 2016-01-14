@@ -180,7 +180,9 @@ CLOSED: [2015-11-05 Thu 15:45]
 ** WAITING Create a function for freeing many memory blocks, based on size and address supplied
 - State "WAITING"    from "DONE"       [2015-11-09 Mon 14:49] \\
   Come back when we finish virtual memory.
-* PROGRESS Virtual memory manager
+* WAITING Virtual memory manager
+- State "WAITING"    from "DONE"       [2015-11-16 Mon 14:45] \\
+  Wait until I finish keyboard driver.
 ** DONE Create a struct of a page table entry
 CLOSED: [2015-11-10 Tue 14:49]
 Remember that bit 12-31 is frame address, not individual byte address.
@@ -208,6 +210,8 @@ CLOSED: [2015-11-13 Fri 16:42]
 Returns page frame number of a page.
 ** PROGRESS Implement virtual to physical address translation
 ** TODO Activate paging in CR2 register
+* PROGRESS Keyboard Driver
+** 
 * Impediments
 ** DONE Investigate why interrupt handling only works when we first divide by 0
 CLOSED: [2015-11-09 Mon 12:12]

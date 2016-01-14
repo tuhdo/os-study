@@ -1,3 +1,75 @@
+* Learning objectives
+* What is a computer?
+- A computer combines a processor, random access memory (RAM), read only memory
+(ROM), and input/output (I/O) ports. 
+
+- A microprocessor is a small processor. A microcomputer is a small computer that
+includes a processor, memory and I/O devices. A microcontroller is a single chip
+computer.
+
+- Current implementation: an electrical circuit that implements computation.
+
+- Future implementation: Biological computer, quantum computer.
+* Computer implementation: Von Neumman architecture
+(Use the PPT slide from Computational Structure Part 2).
+* How can software controls hardware?
+- Through ardware-software interface: ASM.
+
+- Each ASM instruction is implemented in hardware. A collection of ASM
+  instructions is called ISA - Instruction Set Architecture. ISA is a contract
+  between software and hardware.
+
+- ISA allows programmers to control the CPU and other devices in a computer to
+  create computer programs.
+
+- Program is loaded on memory, CPU fetches and execute instruction by
+  instruction until the end. It works for small computer i.e. microcontroller.
+
+* The need for an operating system
+- When resources in a computer system (CPU, memory, hard drive...) became big
+  and more complicated, it's tedious to manually manage all the resources.
+
+- For example: Imagine we have to manually load programs on a computer with 3GB
+  RAM. We would have to load programs at various fix addresses, and for each
+  program a size must be manually calculated to avoid wasting memory resource,
+  and enough for programs to not overriding each other.
+
+- A software is needed to automatically manage all these tasks. This software is
+  called *Operating System*.
+
+* Jobs of an operating system
+Manage hardware resources automatically and efficiently. The two most basic
+tasks that an OS need to perform
+
+- Manage CPU: allows programs to share hardware resources for multitasking.
+- Manage memory: allocates enough storage for a program to function.
+
+The above two resources are essential in a Von Neumman archtecture, and any OS
+should be good at the above tasks. Other responsibilities include:
+
+- Filesystem for managing various types of data.
+- Manage other hardware devices i.e. hard drive, printer, graphic devices...
+- Security: OS rings, kernel/user space, different address spaces for different processes.
+- A framework for managing hardware resources i.e. it should be easy to extend
+  OS code to talk to new hardware.
+
+Our OS will be a simple OS that implements two most basic tasks: manage CPU and memory.
+
+* Features of our educational OS
+Bootloader
+- Stage 1
+- Stage 2
+
+Kernel
+- Kernel space
+- User space
+- Interrupt handler
+- Basic graphic management.
+- PIC Programming.
+- Keyboard programming.
+
+We will learn a great deal about x86 architecture through writing this OS.
+
 * Tools: Build and install Bochs
 ** nasm
 Add option -l for listing label addresses.
@@ -6,6 +78,7 @@ Another trick to simply move the label address to one of a register and for it
 to be stored in Bochs log.
 ** bochsdbg
 * Bootloader
+** How a typical computer boots
 ** General algorithm
 - Before booting: write the bootloader to MBR (first 512 bytes). The bootloader
   must fill 512 bytes entirely, with the last 2 bytes a device signature i.e. a
