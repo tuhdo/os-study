@@ -55,10 +55,10 @@ should be good at the above tasks. Other responsibilities include:
 
 Our OS will be a simple OS that implements two most basic tasks: manage CPU and memory.
 
-* Features of our educational OS
+* What we will implement in our educational OS
 Bootloader
-- Stage 1
-- Stage 2
+- Stage 1: rudimentary setup for next stage
+- Stage 2: setup to prepare for procted mode environment.
 
 Kernel
 - Kernel space
@@ -70,34 +70,107 @@ Kernel
 
 We will learn a great deal about x86 architecture through writing this OS.
 
-* Tools: Build and install Bochs
+* Tools
+** A working Linux environment
 ** nasm
-Add option -l for listing label addresses.
+- Homepage: http://www.nasm.us/
+- Install with a package manager or compile from source.
 ** bochs
-Another trick to simply move the label address to one of a register and for it
-to be stored in Bochs log.
-** bochsdbg
-* Bootloader
-** How a typical computer boots
-** General algorithm
-- Before booting: write the bootloader to MBR (first 512 bytes). The bootloader
-  must fill 512 bytes entirely, with the last 2 bytes a device signature i.e. a
-  flobby disk signature 0xAA55.
+- Homepage: http://bochs.sourceforge.net/
+- Download: http://sourceforge.net/projects/bochs/
+- Compile from source to get both =bochs= and =bochsdbg=.
+- To build:
 
-- When computer starts:
-  + Load first 512 bytes (MBR) and execute code in there.
+./configure --enable-all-optimizations --enable-disasm --enable-logging
+  --with-sdl --with-x --with-x11
+make
+sudo make install
+
+- Rebuilt again, this time with option =--enable-debugger== added. This time,
+  don't run =make install=, but rename the built =bochs= binary to =bochsdbg=
+  because this time it is built as a debugger for exammining each asm
+  instruction.
+
+- Copy the =bochs-dbg= binary to somewhere in your $PATH like =/usr/local/bin=.
+*** Bochs config
+** dd 
+** 
+* Bootloader
+** Boot process
+- When the power button press, the Power Supply Unit (PSU) sends a signal to
+  motherboard.
+
+- Motehrboard reroutes this signal back to PSU to inform about its status. If a
+  0 is received, meaning the motherboard is dead; otherwise, the motherboard is
+  alive and PSU starts supplying power to the rest of the system.
+
+- The PSU then sends a signal, called the "power_good" signal into the
+  motherboard timer. When the timer receives this signal, it stops forcing a
+  reset signal to the CPU and the CPU begins processing instructions
+** Boot process (BIOS)
+BIOS refers to the firmware instructions that are located on the BIOS ROM
+
+- The very first instruction performed by a CPU is to read the contents of a
+  specific memory address that is preprogrammed into the CPU. In the case of x86
+  based processors, this address is *FFFF:0000h*. This is the last 16 bytes of
+  memory at the end of the first megabyte of memory, store a jump instruction
+  (JMP) to jump to BIOS ROM code.
+
+- The BIOS begins initializing a process called POST (Power On Self Test)
+
+- The POST then tests to insure there is good amount of power being supplied,
+  the devices installed (such as keyboard, mouse, USB, serial ports, etc.), and
+  insures the memory is good (By testing for memory curruption).
+
+- After the test is done, the BIOS searches for an operating system stored in
+  the first 512 bytes of a bootable device, like a flobby disk or a hard drive.
+
+** Boot Process (BIOS) - continued
+- Based on the boot order that you set in the BIOS Setup, the BIOS will execute
+  Interrupt (INT) *0x19* to attempt to find a bootable device.
+
+- If no bootable device is found (*INT 0x19* returns), the BIOS goes on to the
+  next device listed in the boot order. If there is no more devices, it will
+  print an error simular to "No Operating System found" and halt the system.
+
+- If a bootloader is found (in the first 512 bytes of a any device), The BIOS
+  then load the bootloader at location *0x7C00h* and start executing bootloader
+  code.
+
+For more detailed steps: http://www.bioscentral.com/misc/biosbasics.htm
+
+** Anatomy of a disk
+
+[[./hdd.gif][hdd]]
+
+** Algorithm
   + Clear segment registers.
   + Print some text (optinal).
   + Load more code in futher sectors of the disk to execute.
-** How to create a virtual flobby disk
-Using dd.
-** How to write a binary file to first sector (MBR)
-Using dd.
-** How to write to any sector
-Using dd with seek option.
-** Read a sector with BIOS interrupt and load it on an address
-Use BIOS routine for reading/writing disk sectors and load in a specific
-address. In real mode, we must not exceed 16 bits or else it will wrap around.
+  + Fill the remaining of 512 bytes with 0, with the last 2 bytes a device
+    signature i.e. a flobby disk signature 0xAA55.
+** A Very simple bootloader
+;*********************************************
+;	Boot1.asm
+;		- A Simple Bootloader
+;
+;	Operating Systems Development Tutorial
+;*********************************************
+ 
+org		0x7c00				; We are loaded by BIOS at 0x7C00
+ 
+bits	16					; We are still in 16 bit Real Mode
+ 
+Start:
+ ; we will fill more code here later
+
+	cli					; Clear all Interrupts
+	hlt					; halt the system
+	
+times 510 - ($-$$) db 0				; We have to be 512 bytes. Clear the rest of the bytes with 0
+ 
+dw 0xAA55					; Boot Signiture
+
 * Rings
 ** Switching rings
 * System architecture
@@ -163,3 +236,4 @@ http://wiki.osdev.org/GDT
   the instruction to use. This is important.
 - Must Define userspace segments (code and data) in GDT, so IRET can jump properly
 
+n

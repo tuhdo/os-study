@@ -1,0 +1,17 @@
+* Tools
+** nasm
+Add option -l for listing label addresses.
+** bochs
+Another trick to simply move the label address to one of a register and for it
+to be stored in Bochs log.
+** bochsdbg
+* Bootlaoder
+** How to create a virtual flobby disk
+Using dd.
+** How to write a binary file to first sector (MBR)
+Using dd.
+** How to write to any sector
+Using dd with seek option.
+** Read a sector with BIOS interrupt and load it on an address
+Use BIOS routine for reading/writing disk sectors and load in a specific
+address. In real mode, we must not exceed 16 bits or else it will wrap around.
