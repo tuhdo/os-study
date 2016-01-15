@@ -12,6 +12,12 @@ computer.
 - Future implementation: Biological computer, quantum computer.
 * Computer implementation: Von Neumman architecture
 (Use the PPT slide from Computational Structure Part 2).
+* Examples of a computer
+[[./macbook.jpeg][macbook]]
+
+[[./stm-microcontroller.jpeg][stm-microcontroller]]
+
+[[./pic.jpeg][pic]]
 * How can software controls hardware?
 - Through ardware-software interface: ASM.
 
