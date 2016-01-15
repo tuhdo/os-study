@@ -1,0 +1,4 @@
+* BIOS Paramater Block and the MBR
+* Processor Modes
+* BIOS Interrups - Printing text and more
+* Segment:Offset Addressing Mode
