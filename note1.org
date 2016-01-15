@@ -143,9 +143,10 @@ BIOS refers to the firmware instructions that are located on the BIOS ROM
 
 - If a bootloader is found (in the first 512 bytes of a any device), The BIOS
   then load the bootloader at location *0x7C00h* and start executing bootloader
-  code.
+  code. Address to jump to, like *0x7c00h*, is defined by the BIOS.
 
 For more detailed steps: http://www.bioscentral.com/misc/biosbasics.htm
+For more infomation about *0x7c00h*: http://www.glamenv-septzen.net/en/view/6
 
 ** Anatomy of a disk
 
