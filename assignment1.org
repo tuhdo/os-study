@@ -1,7 +1,0 @@
-1. Create a Makefile that compile all .nasm files in bootloader and kernel directories.
-2. Create a build directory to store built binary files.
-3. Create a flobby disk with 10 sectors.
-4. Create a empty nasm file call =boot_loader.asm= in =bootloader/= directory.
-   Compile the file.
-5. Write the boot loader content on first sector
-7. Run =bochs= command. Select entry =6= in the menu to start simulation.

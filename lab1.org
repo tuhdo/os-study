@@ -1,0 +1,27 @@
+1. Create a Makefile that compile all .nasm files in bootloader and kernel directories.
+2. Create a build directory to store built binary files.
+3. Create a flobby disk with 10 sectors.
+4. Create a empty nasm file call =boot_loader.asm= in =bootloader/= directory.
+   Compile the file.
+5. Write the boot loader content on first sector
+6. Run =bochs= command. Select entry =6= in the menu to start simulation.
+7. Run =bochsdb= command. Selectr entry =6= in the menu to start debugging.
+8. When the prompt stops at =<bochs:1>=, put a breakpiont at =0x7C00h= with the
+   command:
+
+   #+BEGIN_SRC sh
+     <bochs:1> b 0x7C00
+   #+END_SRC
+
+9. Then, start executing with by enter the command =c=:
+
+   #+BEGIN_SRC sh
+     <bochs:2> c
+   #+END_SRC
+
+10. When Bochs stops at 0x7C00, start executing instruction by instruction with
+    the ocmmand:
+
+   #+BEGIN_SRC sh
+     <bochs:2> n
+   #+END_SRC
