@@ -1,17 +1,74 @@
 * Learning objectives
+At the end of the course, we should be able to write an OS with:
+
+*Bootloader*:
+- Stage 1: rudimentary setup for next stage
+- Stage 2: setup to prepare for procted mode environment.
+
+*Kernel*:
+- Kernel space
+- User space
+- Interrupt handler
+- Basic graphic management.
+- PIC Programming.
+- Keyboard programming.
+- DMA programming.
+
+We will learn a great deal about x86 architecture through writing this OS. Once
+you master the concepts, learning mainstream OS development like Linux will be
+much easier.
+
 * What is a computer?
-- A computer combines a processor, random access memory (RAM), read only memory
+- A *computer* combines a processor, random access memory (RAM), read only memory
 (ROM), and input/output (I/O) ports. 
 
-- A microprocessor is a small processor. A microcomputer is a small computer that
+- A *microprocessor* is a small processor. A microcomputer is a small computer that
 includes a processor, memory and I/O devices. A microcontroller is a single chip
 computer.
 
 - Current implementation: an electrical circuit that implements computation.
 
 - Future implementation: Biological computer, quantum computer.
+
+* Types of Computer implementation
+- Computer can be divided into two types: single-purpose and general-purpose.
+
+- _Single-purpose computer_ is built at *hardware level* for specific tasks. For
+  example, dedicated encoders/decoders , timer, image/video/sound processors...
+  These computers are created through direct circuit designed called
+  *Application-Specific Integrated Circuit* (=ASIC=) or *FPGA*, a programmable
+  hardrware to emulate other hardware.
+
+- _General-purpose computer_: can be programmed (without modifying the hardware
+  like ASIC or FPGA) to emulate various features of single-purpose computers.
+
+- Current general-purpose computer is implemented based on Von Neuman architecture
+
 * Computer implementation: Von Neumman architecture
-(Use the PPT slide from Computational Structure Part 2).
+Named after John Von Neumman.
+
+[[./von_neuman_computer.gif][von_neumman]]
+
+- *Central processing unit*: Performs operations on values in registers & memory.
+- *Main memory*: Array of W words of N bits each.
+- *Input/output devices* to communicate with the outside world.
+
+* How a Von Neumman computer works
+- Fetch: Instruction is retrieved from working memory (RAM).
+- Decode: CPU identifies which instruction has been fetched.
+- Execute: Run the instruction as implemented in processor hardware.
+* Note about single-purpose computer
+- It can be confused between embedded system and single-purpose computer.
+
+- Embedded system is a general-purpose computer with very limited resource,
+  designed to perform a single task at a time.
+
+- Even though embedded system is used for a single purpose, it can be programmed
+  to perform different tasks, depends on its programmers. Single-purpose
+  computer is built at hardware level to perform a task, thus not programmable.
+
+- General-purpose computer, Whether is a super computer, or it is a tiny
+  embedded computer, the model remains the same.
 * Examples of a computer
 [[./macbook.jpeg][macbook]]
 
@@ -19,11 +76,13 @@ computer.
 
 [[./pic.jpeg][pic]]
 * How can software controls hardware?
-- Through ardware-software interface: ASM.
+- Through ardware-software interface: Assembly language.
 
-- Each ASM instruction is implemented in hardware. A collection of ASM
-  instructions is called ISA - Instruction Set Architecture. ISA is a contract
-  between software and hardware.
+- Each ASM instruction is implemented in hardware as a series of bits. Each ASM
+  instruction has a different bit pattern. 
+
+- A collection of ASM instructions is called ISA - Instruction Set Architecture.
+  ISA is a contract between software and hardware.
 
 - ISA allows programmers to control the CPU and other devices in a computer to
   create computer programs.
@@ -61,23 +120,9 @@ should be good at the above tasks. Other responsibilities include:
 
 Our OS will be a simple OS that implements two most basic tasks: manage CPU and memory.
 
-* What we will implement in our educational OS
-Bootloader
-- Stage 1: rudimentary setup for next stage
-- Stage 2: setup to prepare for procted mode environment.
-
-Kernel
-- Kernel space
-- User space
-- Interrupt handler
-- Basic graphic management.
-- PIC Programming.
-- Keyboard programming.
-
-We will learn a great deal about x86 architecture through writing this OS.
-
 * Tools
 ** A working Linux environment
+- Linux has many utilities that make development easier i.e. =make=, =dd=...
 ** nasm
 - Homepage: http://www.nasm.us/
 - Install with a package manager or compile from source.
@@ -87,10 +132,12 @@ We will learn a great deal about x86 architecture through writing this OS.
 - Compile from source to get both =bochs= and =bochsdbg=.
 - To build:
 
-./configure --enable-all-optimizations --enable-disasm --enable-logging
-  --with-sdl --with-x --with-x11
-make
-sudo make install
+#+BEGIN_SRC sh
+  ./configure --enable-all-optimizations --enable-disasm --enable-logging
+    --with-sdl --with-x --with-x11
+  make
+  sudo make install
+#+END_SRC
 
 - Rebuilt again, this time with option =--enable-debugger== added. This time,
   don't run =make install=, but rename the built =bochs= binary to =bochsdbg=
@@ -107,30 +154,41 @@ log:         OSDev.log             # All errors and info logs will output to OSD
 error:       action=report 
 info:        action=report
 ** dd 
+We use =dd= to create a flobby disk image that Bochs can use to boot our OS.
 
-** 
-* Bootloader
-** Boot process (pre BIOS)
-- When the power button press, the Power Supply Unit (PSU) sends a signal to
+To create a disk image::
+
+#+BEGIN_SRC sh
+  dd if=/dev/zero of=disk.dsk bs=512 count=54
+#+END_SRC
+
+=if=: input file to write.
+=of=: output disk image.
+=bs=: block devices read by block; this parameter specifies block size that
+a block device can read at a time
+=count=: number of block a disk can have
+* Boot process
+** Pre BIOS
+- When the power button press, the *Power Supply Unit* (=PSU=) sends a signal to
   motherboard.
 
-- Motehrboard reroutes this signal back to PSU to inform about its status. If a
+- Motherboard reroutes this signal back to PSU to inform about its status. If a
   0 is received, meaning the motherboard is dead; otherwise, the motherboard is
   alive and PSU starts supplying power to the rest of the system.
 
-- The PSU then sends a signal, called the "power_good" signal into the
+- The PSU then sends a signal, called the *power_good* signal into the
   motherboard timer. When the timer receives this signal, it stops forcing a
-  reset signal to the CPU and the CPU begins processing instructions
-** Boot process (BIOS)
-BIOS refers to the firmware instructions that are located on the BIOS ROM
+  reset signal to the CPU and the CPU begins processing instructions.
+** BIOS
+BIOS refers to the firmware instructions that are located on the *BIOS ROM*
 
 - The very first instruction performed by a CPU is to read the contents of a
   specific memory address that is preprogrammed into the CPU. In the case of x86
-  based processors, this address is *FFFF:0000h*. This is the last 16 bytes of
-  memory at the end of the first megabyte of memory, store a jump instruction
+  based processors, this address is *FFFF:0000h*. This is the *last 16 bytes of
+  memory at the end of the first megabyte of memory*, store a jump instruction
   (JMP) to jump to BIOS ROM code.
 
-- The BIOS begins initializing a process called POST (Power On Self Test)
+- The BIOS begins initializing a process called *Power On Self Test* (=POST=)
 
 - The POST then tests to insure there is good amount of power being supplied,
   the devices installed (such as keyboard, mouse, USB, serial ports, etc.), and
@@ -139,7 +197,7 @@ BIOS refers to the firmware instructions that are located on the BIOS ROM
 - After the test is done, the BIOS searches for an operating system stored in
   the first 512 bytes of a bootable device, like a flobby disk or a hard drive.
 
-** Boot Process (BIOS) - continued
+** BIOS - continued
 - Based on the boot order that you set in the BIOS Setup, the BIOS will execute
   Interrupt (INT) *0x19* to attempt to find a bootable device.
 
@@ -158,18 +216,18 @@ For more infomation about *0x7c00h*: http://www.glamenv-septzen.net/en/view/6
 
 [[./hdd.gif][hdd]]
 
-- Sector: a group of 512 bytes. So, Sector 1 represents the first 512 bytes of a disk.
-- Head: the side of the disk. Head 0 is the front side, Head 1 is the back side.
+- *Sector*: a group of 512 bytes. So, Sector 1 represents the first 512 bytes of a disk.
+- *Head*: the side of the disk. Head 0 is the front side, Head 1 is the back side.
   Most disks only have 1 side, hence only 1 head ("Head 1")
-- Track: a collection of sector. There are 18 sectors per track on flobby disk.
-- Cylinder: a collection of same tracks on different platters.
+- *Track*: a collection of sector. There are 18 sectors per track on flobby disk.
+- *Cylinder*: a collection of same tracks on different platters.
 
 ** Algorithm
-  + Clear segment registers.
-  + Print some text (optinal).
-  + Load more code in futher sectors of the disk to execute.
-  + Fill the remaining of 512 bytes with 0, with the last 2 bytes a device
-    signature i.e. a flobby disk signature 0xAA55.
+- Clear segment registers.
+- Print some text (optinal).
+- Load more code in futher sectors of the disk to execute.
+- Fill the remaining of 512 bytes with 0, with the last 2 bytes a device
+  signature i.e. a flobby disk signature 0xAA55.
 ** A Very simple bootloader
 ;*********************************************
 ;	Boot1.asm
