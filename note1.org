@@ -1,4 +1,24 @@
-* Learning objectives
+#+TITLE: How to implement an Operating System from scratch
+#+DATE: 2016 January  22
+#+AUTHOR: Tu, Do
+#+EMAIL: tu.h.do@dektech.com.au
+#+OPTIONS: ':nil *:t -:t ::t <:t H:2 \n:nil ^:t arch:headline
+#+OPTIONS: author:t c:nil creator:comment d:(not "LOGBOOK") date:t
+#+OPTIONS: e:t email:nil f:t inline:t num:t p:nil pri:nil stat:t
+#+OPTIONS: tags:t tasks:t tex:t timestamp:t toc:nil todo:t |:t
+#+CREATOR: Emacs 24.5.1 (Org mode 8.2.10)
+#+DESCRIPTION:
+#+EXCLUDE_TAGS: noexport
+#+KEYWORDS:
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+startup: beamer
+#+BEAMER_THEME: Frankfurt [height=9pt]
+#+LaTeX_CLASS: beamer
+#+BEAMER_FRAME_LEVEL: 1
+
+* How to implement an Operating System from scratch
+** Learning objectives
 At the end of the course, we should be able to write an OS with:
 
 *Bootloader*:
@@ -18,12 +38,12 @@ We will learn a great deal about x86 architecture through writing this OS. Once
 you master the concepts, learning mainstream OS development like Linux will be
 much easier.
 
-* What is a computer?
-- A *computer* combines a processor, random access memory (RAM), read only memory
-(ROM), and input/output (I/O) ports. 
+** What is a computer?
+- A *computer* combines a processor, random access memory (RAM), read only
+  memory (ROM), and input/output (I/O) ports.
 
-- A *microprocessor* is a small processor. A microcomputer is a small computer that
-includes a processor, memory and I/O devices. 
+- A *microprocessor* is a small processor. A microcomputer is a small computer
+  that includes a processor, memory and I/O devices.
 
 - A *micro-controller* is a single chip computer.
 
@@ -31,7 +51,7 @@ includes a processor, memory and I/O devices.
 
 - Future implementation: Biological computer, quantum computer.
 
-* Types of Computers
+** Types of Computers
 - Computers can be divided into two types: single-purpose and general-purpose.
 
 - _Single-purpose computer_ is a computer that is built at *hardware level* for
@@ -44,14 +64,14 @@ includes a processor, memory and I/O devices.
   like ASIC or FPGA) to emulate various features of single-purpose computers.
 
   - Current general-purpose computer is implemented based on Von Neuman architecture
-* Note about single-purpose computer
+** Note about single-purpose computer
 - Another type of single-purpose computer is a general-purpose computer with
   very limited resource that only able to perform one or a few tasks.
 
 - Even though these computers are used for a single purpose, it can be
   programmed to perform different tasks, depends on the programmers.
 
-* Computer implementation: Von Neumman architecture
+** Computer implementation: Von Neumman architecture
 Named after John Von Neumman.
 
 [[./von_neuman_computer.gif][von_neumman]]
@@ -60,17 +80,17 @@ Named after John Von Neumman.
 - *Main memory*: Array of W words of N bits each.
 - *Input/output devices* to communicate with the outside world.
 
-* How a Von Neumman computer works
+** How a Von Neumman computer works
 - Fetch: Instruction is retrieved from working memory (RAM).
 - Decode: CPU identifies which instruction has been fetched.
 - Execute: Run the instruction as implemented in processor hardware.
-* Examples of a computer
+** Examples of a computer
 [[./macbook.jpeg][macbook]]
 
 [[./stm-microcontroller.jpeg][stm-microcontroller]]
 
 [[./pic.jpeg][pic]]
-* How can software controls hardware?
+** How can software controls hardware?
 - Through hardware-software interface: *Assembly language*.
 
 - Each ASM instruction is implemented in hardware as a series of bits. Each ASM
@@ -84,7 +104,7 @@ Named after John Von Neumman.
 
 - Program is loaded on memory, CPU fetches and execute instruction by
   instruction until the end. It works for small computer i.e. micro-controller.
-* Important remark
+** Important remark
 - *You can implement all software functions in hardware, and you can also
   possible to implement all hardware functions in software.*
 
@@ -100,14 +120,14 @@ Named after John Von Neumman.
     mul edx     ; multiply edx with eax
   #+END_SRC
 
-* Example
+** Example
 
 - Z80 CPU has no *mul* intruction for multiplication. Programmers have to create
   a routine using simpler built-in instruction.
 
 - x86_64 and almost all modern CPU provide *mul* instruction. 
 
-* The need for an operating system
+** The need for an operating system
 - When resources in a computer system (CPU, memory, hard drive...) became big
   and more complicated, it's tedious to manually manage all the resources.
 
@@ -119,7 +139,7 @@ Named after John Von Neumman.
 - A software is needed to automatically manage all these tasks. This software is
   called *Operating System*.
 
-* Jobs of an operating system
+** Jobs of an operating system
 Manage hardware resources automatically and efficiently. The two most basic
 tasks that an OS need to perform
 
@@ -137,45 +157,24 @@ should be good at the above tasks. Other responsibilities include:
 
 Our OS will be a simple OS that implements two most basic tasks: manage CPU and memory.
 
-* Tools
-** A working Linux environment
+** Tools
+*** A working Linux environment
 - Linux has many utilities that make development easier i.e. =make=, =dd=...
 
 - It is easier to control development process with Linux, because you are
   expected to do so. This is beneficial for our educational purpose.
 
-** nasm
+*** nasm
 - Homepage: http://www.nasm.us/
 - Install with a package manager or compile from source.
 
-** bochs
+** Tools (continued)
+*** bochs
 - Homepage: http://bochs.sourceforge.net/
 - Download: http://sourceforge.net/projects/bochs/
 - Compile from source to get both =bochs= and =bochsdbg=.
-- To build:
 
-#+BEGIN_SRC sh
-  ./configure --enable-all-optimizations --enable-disasm --enable-logging
-    --with-sdl --with-x --with-x11
-  make
-  sudo make install
-#+END_SRC
-
-- Rebuilt again, this time with option =--enable-debugger== added. This time,
-  don't run =make install=, but rename the built =bochs= binary to =bochsdbg=
-  because this time it is built as a debugger for exammining each asm
-  instruction.
-
-- Copy the =bochs-dbg= binary to somewhere in your $PATH like =/usr/local/bin=.
-*** Bochs config
-# boot from floppy using our disk image -------------------------------
-floppya: 1_44="/home/<your username>/disk.dsk", status=inserted  # Boot from drive A
- 
-# logging and reporting -----------------------------------------------
-log:         OSDev.log             # All errors and info logs will output to OSDev.log
-error:       action=report 
-info:        action=report
-** dd 
+*** dd 
 We use =dd= to create a flobby disk image that Bochs can use to boot our OS.
 
 To create a disk image::
@@ -189,8 +188,8 @@ To create a disk image::
 =bs=: block devices read by block; this parameter specifies block size that
 a block device can read at a time
 =count=: number of block a disk can have
-* Boot process
-** Pre BIOS
+** Boot process
+*** Pre BIOS
 - When the power button press, the *Power Supply Unit* (=PSU=) sends a signal to
   motherboard.
 
@@ -201,7 +200,7 @@ a block device can read at a time
 - The PSU then sends a signal, called the *power_good* signal into the
   motherboard timer. When the timer receives this signal, it stops forcing a
   reset signal to the CPU and the CPU begins processing instructions.
-** BIOS
+*** BIOS
 BIOS refers to the firmware instructions that are located on the *BIOS ROM*
 
 - The very first instruction performed by a CPU is to read the contents of a
@@ -219,7 +218,7 @@ BIOS refers to the firmware instructions that are located on the *BIOS ROM*
 - After the test is done, the BIOS searches for an operating system stored in
   the first 512 bytes of a bootable device, like a flobby disk or a hard drive.
 
-** BIOS - continued
+*** BIOS - continued
 - Based on the boot order that you set in the BIOS Setup, the BIOS will execute
   Interrupt (INT) *0x19* to attempt to find a bootable device.
 
@@ -234,7 +233,7 @@ BIOS refers to the firmware instructions that are located on the *BIOS ROM*
 For more detailed steps: http://www.bioscentral.com/misc/biosbasics.htm
 For more infomation about *0x7c00h*: http://www.glamenv-septzen.net/en/view/6
 
-** Anatomy of a disk
+*** Anatomy of a disk
 
 [[./hdd.gif][hdd]]
 
@@ -244,13 +243,13 @@ For more infomation about *0x7c00h*: http://www.glamenv-septzen.net/en/view/6
 - *Track*: a collection of sector. There are 18 sectors per track on flobby disk.
 - *Cylinder*: a collection of same tracks on different platters.
 
-** Algorithm
+*** Algorithm
 - Clear segment registers.
 - Print some text (optinal).
 - Load more code in futher sectors of the disk to execute.
 - Fill the remaining of 512 bytes with 0, with the last 2 bytes a device
   signature i.e. a flobby disk signature 0xAA55.
-** A Very simple bootloader
+*** A Very simple bootloader
 ;*********************************************
 ;	Boot1.asm
 ;		- A Simple Bootloader

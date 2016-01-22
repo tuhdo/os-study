@@ -1,25 +1,62 @@
-1. Create a Makefile that compile all .nasm files in bootloader and kernel directories.
-2. Create a build directory to store built binary files.
-3. Create a flobby disk with 10 sectors.
-4. Create a empty nasm file call =boot_loader.asm= in =bootloader/= directory.
+1. Setting up our working environment (assume Linux is being used).
+
+   + *nasm*:
+
+   + *Bochs*:
+
+     * To build:
+
+#+BEGIN_SRC sh
+    ./configure --enable-all-optimizations \
+                --enable-disasm --enable-logging \
+                --with-sdl \
+                --with-x \
+                --with-x11
+    make
+    sudo make install
+#+END_SRC
+   * Rebuilt again, this time with option =--enable-debugger== added. This time,
+  don't run =make install=, but rename the built =bochs= binary to =bochsdbg=
+  because this time it is built as a debugger for exammining each asm
+  instruction.
+
+   * Copy the =bochs-dbg= binary to somewhere in your $PATH like
+     =/usr/local/bin=.
+
+   * Create a config for Bochs to load from a virtual flobby disk:
+
+     #+BEGIN_SRC text
+       # boot from floppy using our disk image -------------------------------
+       floppya: 1_44="/home/<your username>/disk.dsk", status=inserted  # Boot from drive A
+ 
+       # logging and reporting -----------------------------------------------
+       log:         OSDev.log             # All errors and info logs will output to OSDev.log
+       error:       action=report 
+       info:        action=report 
+     #+END_SRC
+
+2. Create a Makefile that compile all .nasm files in bootloader and kernel directories.
+3. Create a build directory to store built binary files.
+4. Create a flobby disk with 10 sectors.
+5. Create a empty nasm file call =boot_loader.asm= in =bootloader/= directory.
    Compile the file.
-5. Write the boot loader content on first sector
-6. Run =bochs= command. Select entry =6= in the menu to start simulation.
-7. Run =bochsdb= command. Selectr entry =6= in the menu to start debugging.
-8. When the prompt stops at =<bochs:1>=, put a breakpiont at =0x7C00h= with the
+6. Write the boot loader content on first sector
+7. Run =bochs= command. Select entry =6= in the menu to start simulation.
+8. Run =bochsdb= command. Selectr entry =6= in the menu to start debugging.
+9. When the prompt stops at =<bochs:1>=, put a breakpiont at =0x7C00h= with the
    command:
 
    #+BEGIN_SRC sh
      <bochs:1> b 0x7C00
    #+END_SRC
 
-9. Then, start executing with by enter the command =c=:
+10. Then, start executing with by enter the command =c=:
 
-   #+BEGIN_SRC sh
-     <bochs:2> c
-   #+END_SRC
+    #+BEGIN_SRC sh
+      <bochs:2> c
+    #+END_SRC
 
-10. When Bochs stops at 0x7C00, start executing instruction by instruction with
+11. When Bochs stops at 0x7C00, start executing instruction by instruction with
     the ocmmand:
 
    #+BEGIN_SRC sh
