@@ -5,7 +5,7 @@
 #+OPTIONS: ':nil *:t -:t ::t <:t H:2 \n:nil ^:t arch:headline
 #+OPTIONS: author:t c:nil creator:comment d:(not "LOGBOOK") date:t
 #+OPTIONS: e:t email:nil f:t inline:t num:t p:nil pri:nil stat:t
-#+OPTIONS: tags:t tasks:t tex:t timestamp:t toc:nil todo:t |:t
+#+OPTIONS: tags:t tasks:t tex:t timestamp:t toc:t todo:t |:t
 #+CREATOR: Emacs 24.5.1 (Org mode 8.2.10)
 #+DESCRIPTION:
 #+EXCLUDE_TAGS: noexport
@@ -13,11 +13,11 @@
 #+LANGUAGE: en
 #+SELECT_TAGS: export
 #+startup: beamer
-#+BEAMER_THEME: Frankfurt [height=9pt]
 #+LaTeX_CLASS: beamer
-#+BEAMER_FRAME_LEVEL: 1
+#+BEAMER_FRAME_LEVEL: 2
+#+BEAMER_THEME: Warsaw
 
-* How to implement an Operating System from scratch
+* Overview
 ** Learning objectives
 At the end of the course, we should be able to write an OS with:
 
@@ -81,9 +81,11 @@ Named after John Von Neumman.
 - *Input/output devices* to communicate with the outside world.
 
 ** How a Von Neumman computer works
-- Fetch: Instruction is retrieved from working memory (RAM).
-- Decode: CPU identifies which instruction has been fetched.
-- Execute: Run the instruction as implemented in processor hardware.
+- *Fetch*: Instruction is retrieved from working memory (RAM).
+
+- *Decode*: CPU identifies which instruction has been fetched.
+
+- *Execute*: Run the instruction as implemented in processor hardware.
 ** Examples of a computer
 [[./macbook.jpeg][macbook]]
 
@@ -104,6 +106,7 @@ Named after John Von Neumman.
 
 - Program is loaded on memory, CPU fetches and execute instruction by
   instruction until the end. It works for small computer i.e. micro-controller.
+
 ** Important remark
 - *You can implement all software functions in hardware, and you can also
   possible to implement all hardware functions in software.*
@@ -119,6 +122,13 @@ Named after John Von Neumman.
     mov edx, 1024
     mul edx     ; multiply edx with eax
   #+END_SRC
+
+** Other interfaces
+
+- Registers: used for storing temporary data and controlling CPU and other
+  hardware devices.
+
+- Port: an indirect way to control devices.
 
 ** Example
 
@@ -143,38 +153,39 @@ Named after John Von Neumman.
 Manage hardware resources automatically and efficiently. The two most basic
 tasks that an OS need to perform
 
-- Manage CPU: allows programs to share hardware resources for multitasking.
-- Manage memory: allocates enough storage for a program to function.
+- *Manage CPU*: allows programs to share hardware resources for multitasking.
+- *Manage memory*: allocates enough storage for a program to function.
 
 The above two resources are essential in a Von Neumman archtecture, and any OS
-should be good at the above tasks. Other responsibilities include:
+should be good at the above tasks. 
 
+** Other responsibilities
 - Filesystem for managing various types of data.
 - Manage other hardware devices i.e. hard drive, printer, graphic devices...
 - Security: OS rings, kernel/user space, different address spaces for different processes.
 - A framework for managing hardware resources i.e. it should be easy to extend
   OS code to talk to new hardware.
 
-Our OS will be a simple OS that implements two most basic tasks: manage CPU and memory.
+Our OS will be a simple OS that implements two most basic tasks: manage CPU and
+memory, well.
 
-** Tools
-*** A working Linux environment
+* Tools
+** A working Linux environment
 - Linux has many utilities that make development easier i.e. =make=, =dd=...
 
 - It is easier to control development process with Linux, because you are
   expected to do so. This is beneficial for our educational purpose.
 
-*** nasm
+** nasm
 - Homepage: http://www.nasm.us/
 - Install with a package manager or compile from source.
 
-** Tools (continued)
-*** bochs
+** bochs
 - Homepage: http://bochs.sourceforge.net/
 - Download: http://sourceforge.net/projects/bochs/
 - Compile from source to get both =bochs= and =bochsdbg=.
 
-*** dd 
+** dd 
 We use =dd= to create a flobby disk image that Bochs can use to boot our OS.
 
 To create a disk image::
@@ -188,8 +199,8 @@ To create a disk image::
 =bs=: block devices read by block; this parameter specifies block size that
 a block device can read at a time
 =count=: number of block a disk can have
-** Boot process
-*** Pre BIOS
+* Boot process
+** Pre BIOS
 - When the power button press, the *Power Supply Unit* (=PSU=) sends a signal to
   motherboard.
 
@@ -200,7 +211,7 @@ a block device can read at a time
 - The PSU then sends a signal, called the *power_good* signal into the
   motherboard timer. When the timer receives this signal, it stops forcing a
   reset signal to the CPU and the CPU begins processing instructions.
-*** BIOS
+** BIOS
 BIOS refers to the firmware instructions that are located on the *BIOS ROM*
 
 - The very first instruction performed by a CPU is to read the contents of a
@@ -218,7 +229,7 @@ BIOS refers to the firmware instructions that are located on the *BIOS ROM*
 - After the test is done, the BIOS searches for an operating system stored in
   the first 512 bytes of a bootable device, like a flobby disk or a hard drive.
 
-*** BIOS - continued
+** BIOS - continued
 - Based on the boot order that you set in the BIOS Setup, the BIOS will execute
   Interrupt (INT) *0x19* to attempt to find a bootable device.
 
@@ -233,7 +244,7 @@ BIOS refers to the firmware instructions that are located on the *BIOS ROM*
 For more detailed steps: http://www.bioscentral.com/misc/biosbasics.htm
 For more infomation about *0x7c00h*: http://www.glamenv-septzen.net/en/view/6
 
-*** Anatomy of a disk
+** Anatomy of a disk
 
 [[./hdd.gif][hdd]]
 
@@ -243,13 +254,13 @@ For more infomation about *0x7c00h*: http://www.glamenv-septzen.net/en/view/6
 - *Track*: a collection of sector. There are 18 sectors per track on flobby disk.
 - *Cylinder*: a collection of same tracks on different platters.
 
-*** Algorithm
+** Algorithm
 - Clear segment registers.
 - Print some text (optinal).
 - Load more code in futher sectors of the disk to execute.
 - Fill the remaining of 512 bytes with 0, with the last 2 bytes a device
   signature i.e. a flobby disk signature 0xAA55.
-*** A Very simple bootloader
+** A Very simple bootloader
 ;*********************************************
 ;	Boot1.asm
 ;		- A Simple Bootloader
@@ -270,3 +281,4 @@ Start:
 times 510 - ($-$$) db 0				; We have to be 512 bytes. Clear the rest of the bytes with 0
  
 dw 0xAA55					; Boot Signiture
+* Using BIOS interrupt services
