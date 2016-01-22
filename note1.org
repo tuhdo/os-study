@@ -3,7 +3,7 @@ At the end of the course, we should be able to write an OS with:
 
 *Bootloader*:
 - Stage 1: rudimentary setup for next stage
-- Stage 2: setup to prepare for procted mode environment.
+- Stage 2: setup to prepare for protected mode environment.
 
 *Kernel*:
 - Kernel space
@@ -23,26 +23,33 @@ much easier.
 (ROM), and input/output (I/O) ports. 
 
 - A *microprocessor* is a small processor. A microcomputer is a small computer that
-includes a processor, memory and I/O devices. A microcontroller is a single chip
-computer.
+includes a processor, memory and I/O devices. 
+
+- A *micro-controller* is a single chip computer.
 
 - Current implementation: an electrical circuit that implements computation.
 
 - Future implementation: Biological computer, quantum computer.
 
-* Types of Computer implementation
-- Computer can be divided into two types: single-purpose and general-purpose.
+* Types of Computers
+- Computers can be divided into two types: single-purpose and general-purpose.
 
-- _Single-purpose computer_ is built at *hardware level* for specific tasks. For
-  example, dedicated encoders/decoders , timer, image/video/sound processors...
-  These computers are created through direct circuit designed called
-  *Application-Specific Integrated Circuit* (=ASIC=) or *FPGA*, a programmable
-  hardrware to emulate other hardware.
+- _Single-purpose computer_ is a computer that is built at *hardware level* for
+  specific tasks. For example, dedicated encoders/decoders , timer,
+  image/video/sound processors... These computers are created through direct
+  circuit designed called *Application-Specific Integrated Circuit* (=ASIC=) or
+  *FPGA*, a programmable hardrware to emulate other hardware.
 
 - _General-purpose computer_: can be programmed (without modifying the hardware
   like ASIC or FPGA) to emulate various features of single-purpose computers.
 
-- Current general-purpose computer is implemented based on Von Neuman architecture
+  - Current general-purpose computer is implemented based on Von Neuman architecture
+* Note about single-purpose computer
+- Another type of single-purpose computer is a general-purpose computer with
+  very limited resource that only able to perform one or a few tasks.
+
+- Even though these computers are used for a single purpose, it can be
+  programmed to perform different tasks, depends on the programmers.
 
 * Computer implementation: Von Neumman architecture
 Named after John Von Neumman.
@@ -57,18 +64,6 @@ Named after John Von Neumman.
 - Fetch: Instruction is retrieved from working memory (RAM).
 - Decode: CPU identifies which instruction has been fetched.
 - Execute: Run the instruction as implemented in processor hardware.
-* Note about single-purpose computer
-- It can be confused between embedded system and single-purpose computer.
-
-- Embedded system is a general-purpose computer with very limited resource,
-  designed to perform a single task at a time.
-
-- Even though embedded system is used for a single purpose, it can be programmed
-  to perform different tasks, depends on its programmers. Single-purpose
-  computer is built at hardware level to perform a task, thus not programmable.
-
-- General-purpose computer, Whether is a super computer, or it is a tiny
-  embedded computer, the model remains the same.
 * Examples of a computer
 [[./macbook.jpeg][macbook]]
 
@@ -76,10 +71,10 @@ Named after John Von Neumman.
 
 [[./pic.jpeg][pic]]
 * How can software controls hardware?
-- Through ardware-software interface: Assembly language.
+- Through hardware-software interface: *Assembly language*.
 
 - Each ASM instruction is implemented in hardware as a series of bits. Each ASM
-  instruction has a different bit pattern. 
+  instruction has a different bit pattern.
 
 - A collection of ASM instructions is called ISA - Instruction Set Architecture.
   ISA is a contract between software and hardware.
@@ -88,7 +83,29 @@ Named after John Von Neumman.
   create computer programs.
 
 - Program is loaded on memory, CPU fetches and execute instruction by
-  instruction until the end. It works for small computer i.e. microcontroller.
+  instruction until the end. It works for small computer i.e. micro-controller.
+* Important remark
+- *You can implement all software functions in hardware, and you can also
+  possible to implement all hardware functions in software.*
+
+- Complex instructions can be built at hardware level, like all the assembly
+  instructions of a CPU. See [[http://sgate.emt.bme.hu/patai/publications/z80guide/part4.html][this page]] for details implementaion details.
+
+- However, complex instructions can be created from simpler instructions, if the
+  CPU does not support such instructions. To mulitple, simply use *mul*
+  instruction.
+
+  #+BEGIN_SRC asm
+    mov edx, 1024
+    mul edx     ; multiply edx with eax
+  #+END_SRC
+
+* Example
+
+- Z80 CPU has no *mul* intruction for multiplication. Programmers have to create
+  a routine using simpler built-in instruction.
+
+- x86_64 and almost all modern CPU provide *mul* instruction. 
 
 * The need for an operating system
 - When resources in a computer system (CPU, memory, hard drive...) became big
@@ -123,9 +140,14 @@ Our OS will be a simple OS that implements two most basic tasks: manage CPU and 
 * Tools
 ** A working Linux environment
 - Linux has many utilities that make development easier i.e. =make=, =dd=...
+
+- It is easier to control development process with Linux, because you are
+  expected to do so. This is beneficial for our educational purpose.
+
 ** nasm
 - Homepage: http://www.nasm.us/
 - Install with a package manager or compile from source.
+
 ** bochs
 - Homepage: http://bochs.sourceforge.net/
 - Download: http://sourceforge.net/projects/bochs/
