@@ -17,7 +17,7 @@
 #+BEAMER_FRAME_LEVEL: 2
 #+BEAMER_THEME: Warsaw
 
-* Overview
+* Overview - Essential Concepts
 ** Learning objectives
 At the end of the course, we should be able to write an OS with:
 
@@ -92,7 +92,7 @@ Named after John Von Neumman.
 [[./stm-microcontroller.jpeg][stm-microcontroller]]
 
 [[./pic.jpeg][pic]]
-** How can software controls hardware?
+** Hardware-software interface
 - Through hardware-software interface: *Assembly language*.
 
 - Each ASM instruction is implemented in hardware as a series of bits. Each ASM
@@ -106,6 +106,44 @@ Named after John Von Neumman.
 
 - Program is loaded on memory, CPU fetches and execute instruction by
   instruction until the end. It works for small computer i.e. micro-controller.
+** Other interfaces
+- *Registers*: used for storing temporary data and controlling CPU and other
+  hardware devices. This method allows software directly control the hardware
+  through writing to its registers.
+
+- *Port*: an indirect way to control devices, by sending commands to such devices
+  through ports.
+
+** Understanding CPU architecture is essential to writing an OS from scratch
+- To use these devices, a programmer needs to controls the CPU to actually use
+  (read/write) the mentioned interfaces (register and port).
+
+- Depend on each CPU architecture, many kernel concepts are already implemented
+  in hardware. A kernel programmer needs to know which instruction supports
+  which concept, to avoid duplicating such concept in software.
+
+- Make use of CPU built-in supports for OS boosts both OS performance and
+  developer productivity.
+
+- To effectively use the CPU, a programmer needs to understand the documentation
+  provided from CPU manufacturer. For example, [[http://www.intel.com/content/www/us/en/processors/architectures-software-developer-manuals.html][Intel® 64 and IA-32 Architectures
+  Software Developer Manuals]].
+
+- Understanding CPU well can make it easier to learn other specialized CPUs.
+
+** Specialized CPU
+- CPU is meant for general-purpose computation. However, many computations are
+  intensive for normal CPU, such as graphic processing.
+
+- For that reason, application-specific processors are made. In the case of
+  graphic processing, these processors are called GPUs. GPU is just a CPU with
+  instructions geared toward graphic processing.
+
+- Specialized processors may or may not have its own ISA. Often, just registers
+  and ports are enough. 
+
+- For complex processor like GPU, it usually has its own ISA. For example: [[http://developer.amd.com/wordpress/media/2012/10/R700-Family_Instruction_Set_Architecture.pdf][AMD's
+  ATI R700-Family Instruction Set Architecture]].
 
 ** Important remark
 - *You can implement all software functions in hardware, and you can also
@@ -123,23 +161,15 @@ Named after John Von Neumman.
     mul edx     ; multiply edx with eax
   #+END_SRC
 
-** Other interfaces
-
-- Registers: used for storing temporary data and controlling CPU and other
-  hardware devices.
-
-- Port: an indirect way to control devices.
-
 ** Example
-
 - Z80 CPU has no *mul* intruction for multiplication. Programmers have to create
   a routine using simpler built-in instruction.
 
 - x86_64 and almost all modern CPU provide *mul* instruction. 
 
 ** The need for an operating system
-- When resources in a computer system (CPU, memory, hard drive...) became big
-  and more complicated, it's tedious to manually manage all the resources.
+- When resources in a computer system (CPU, GPU, memory, hard drive...) became
+  big and more complicated, it's tedious to manually manage all the resources.
 
 - For example: Imagine we have to manually load programs on a computer with 3GB
   RAM. We would have to load programs at various fix addresses, and for each
@@ -158,6 +188,51 @@ tasks that an OS need to perform
 
 The above two resources are essential in a Von Neumman archtecture, and any OS
 should be good at the above tasks. 
+
+** Hardware abstraction layer
+- There are so many hardware out there, so it's best to leave the hardware
+  creators how the devices talk to OS.
+
+- To achieve that goal, the OS only provides a set of agreed software interfaces
+  between itself and the device drivers. This is called *Hardware Abstraction
+  Layer*.
+
+- In C, this software interface is function pointer.
+
+** _Example_: device driver in Linux
+
+- Linux provides a general purpose application for managing Ethernet interface,
+  called *ethtool*.
+
+- The application works on many devices, to perform many operations such as get
+  Ethernet settings, get device registers, get data dump...
+
+- =include/linux/ethtool.h= provides a struct of function pointers called
+  =ethtool_ops= that represents standard *ethtool* operation.
+
+- Each Ethernet driver needs to implement each function in this struct.
+
+** _Specific Example_: IGB driver in Linux
+- =ethtool_ops= contains one of this function pointer:
+
+  #+BEGIN_SRC C
+    int (*get_settings)(struct net_device *, struct ethtool_cmd *);
+  #+END_SRC
+
+- =igb_ethtool.c= implements the function pointer with its function:
+
+#+BEGIN_SRC C
+  static int igb_get_settings(struct net_device *netdev, struct ethtool_cmd *ecmd)
+#+END_SRC
+
+and assign the function to its =ethtool_ops=:
+
+#+BEGIN_SRC C
+  static const struct ethtool_ops igb_ethtool_ops = {
+    .get_settings   = igb_get_settings,
+    ....
+  };
+#+END_SRC
 
 ** Other responsibilities
 - Filesystem for managing various types of data.
