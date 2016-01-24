@@ -17,8 +17,7 @@
 #+BEAMER_FRAME_LEVEL: 2
 #+BEAMER_THEME: Warsaw
 
-* Overview - Essential Concepts
-** Learning objectives
+* Learning objectives
 At the end of the course, we should be able to write an OS with:
 
 *Bootloader*:
@@ -37,6 +36,22 @@ At the end of the course, we should be able to write an OS with:
 We will learn a great deal about x86 architecture through writing this OS. Once
 you master the concepts, learning mainstream OS development like Linux will be
 much easier.
+
+* Why do we need to write a OS from scratch?
+#+BEGIN_QUOTE
+Isn't it better to learn Linux? 
+#+END_QUOTE
+
+It's not.
+
+- To learn how computer actually works and how you can write software that 
+manages it - the OS.
+- You need to learn the fundementals, so that when you can adapt to any OS and
+not just Linux, or even write a new one.
+- You won't fully understand how Linux works without writing one on your own anyway.
+- Writing your own OS is fun.
+
+* Overview - Essential Concepts
 
 ** What is a computer?
 - A *computer* combines a processor, random access memory (RAM), read only
@@ -142,8 +157,8 @@ Named after John Von Neumman.
 - Specialized processors may or may not have its own ISA. Often, just registers
   and ports are enough. 
 
-- For complex processor like GPU, it usually has its own ISA. For example: [[http://developer.amd.com/wordpress/media/2012/10/R700-Family_Instruction_Set_Architecture.pdf][AMD's
-  ATI R700-Family Instruction Set Architecture]].
+- For complex processor like GPU, it usually has its own ISA. For example: [[http://developer.amd.com/wordpress/media/2012/10/R700-Family_Instruction_Set_Architecture.pdf][AMD's 
+ATI R700-Family Instruction Set Architecture]].
 
 ** Important remark
 - *You can implement all software functions in hardware, and you can also
