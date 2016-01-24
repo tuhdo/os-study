@@ -51,6 +51,12 @@ not just Linux, or even write a new one.
 - You won't fully understand how Linux works without writing one on your own anyway.
 - Writing your own OS is fun.
 
+* Our "textbook"
+- This (and future) presentation is based on the [[http://www.brokenthorn.com/Resources/OSDevIndex.html][Brokenthorn's Operating System 
+Development Series]]
+
+- The guide is our "textbook". You can find more details there.
+- I provide presentations and labs for the "textbook"
 * Overview - Essential Concepts
 
 ** What is a computer?
