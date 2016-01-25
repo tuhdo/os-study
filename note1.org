@@ -57,8 +57,7 @@ Development Series]]
 
 - The guide is our "textbook". You can find more details there.
 - I provide presentations and labs for the "textbook"
-* Overview - Essential Concepts
-
+* Overview - Essential concepts
 ** What is a computer?
 - A *computer* combines a processor, random access memory (RAM), read only
   memory (ROM), and input/output (I/O) ports.
@@ -112,7 +111,7 @@ Named after John Von Neumman.
 
 [[./stm-microcontroller.jpeg][stm-microcontroller]]
 
-[[./pic.jpeg][pic]]
+[[./pic.jpeg][pic]]1
 ** Hardware-software interface
 - Through hardware-software interface: *Assembly language*.
 
@@ -135,9 +134,11 @@ Named after John Von Neumman.
 - *Port*: an indirect way to control devices, by sending commands to such devices
   through ports.
 
+- Software can only control and use these interfces by using the hardware-software
+  interface - the assembly language of a CPU.
 ** Understanding CPU architecture is essential to writing an OS from scratch
 - To use these devices, a programmer needs to controls the CPU to actually use
-  (read/write) the mentioned interfaces (register and port).
+  (read/write) register and port.
 
 - Depend on each CPU architecture, many kernel concepts are already implemented
   in hardware. A kernel programmer needs to know which instruction supports
@@ -264,7 +265,15 @@ and assign the function to its =ethtool_ops=:
 
 Our OS will be a simple OS that implements two most basic tasks: manage CPU and
 memory, well.
-
+** Important documents to use when writing an OS from scratch
+- *Hardware datasheet*: hardrware documents - including CPU and other
+  hardware devices - on various topics, i.e. the properties of such devices,
+  programming interfaces...,
+- *Block diagram*: to understand how hardware devices communicate with each other
+  and with the CPU.
+- *Timing diagram*: to achieve real-time, not only code needed to be correct, but
+  also conforms to real-time constrainsts expressed through timing diagrams.
+** Examples (Hardware Documents)
 * Tools
 ** A working Linux environment
 - Linux has many utilities that make development easier i.e. =make=, =dd=...
