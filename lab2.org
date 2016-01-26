@@ -1,0 +1,2 @@
+1. Read [[https://0xax.gitbooks.io/linux-insides/content/Booting/index.html][Kernel boot process]] to see our knowledge is applied in practice.
+    (Note: This is added after finishing all the bootloader exercises)
