@@ -1,4 +1,37 @@
-* BIOS Paramater Block and the MBR
 * Processor Modes
-* BIOS Interrups - Printing text and more
+** Real mode
+- 16-bit environment.
+- Uses the native segment:offset memory model.
+- Is limited to 1 MB (+64k) of memory.
+- No Virtual Memory or Memory Protection.
+** Protected mode
+- 32-bit environment.
+- Memory protection through *Descriptor Table*.
+- No more direct memory accessing. Any memory access must be done through the
+  use of *Descriptor Table*.
+- Can accesss up to 4GB RAM.
+- Virtual memory available.
+* BIOS interrupt services
+** How to use
+- BIOS provides basic subroutines for hardware manipulation i.e. read from a flobby
+  disk or write text on screen.
+
+- To call these subroutines, simply put the arguments on appropriate registers
+  (specified by the documentation of each subroutine), and call instruction
+  =int= on appropriate interrupt number provided by a BIOS.
+
+- At this stage, the BIOS interrupt service routines are the only available
+  interrupts for a software to use. Using any undefined interrupt number causing
+  the software to crash.
+
+- BIOS subroutines are only available in real-mode. When switching to proctected
+  mode, these subroutines are unavailable.
+
+** Example 1: reading data from a flobby disk into memory
+
+** Example 2: printing text on screen
+* BIOS Paramater Block and the MBR
 * Segment:Offset Addressing Mode
+** History
+- 16-bit CPU could address only 64 kB memory directly. Even at the time,
+  programs need more than that.

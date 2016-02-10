@@ -134,8 +134,9 @@ Named after John Von Neumman.
 - *Port*: an indirect way to control devices, by sending commands to such devices
   through ports.
 
-- Software can only control and use these interfces by using the hardware-software
-  interface - the assembly language of a CPU.
+Software can only control and use these interfces by using the hardware-software
+interface - the assembly language of a CPU.
+
 ** Understanding CPU architecture is essential to writing an OS from scratch
 - To use these devices, a programmer needs to controls the CPU to actually use
   (read/write) register and port.
@@ -175,7 +176,7 @@ ATI R700-Family Instruction Set Architecture]].
   instructions of a CPU. See [[http://sgate.emt.bme.hu/patai/publications/z80guide/part4.html][this page]] for details implementaion details.
 
 - However, complex instructions can be created from simpler instructions, if the
-  CPU does not support such instructions. To mulitple, simply use *mul*
+  CPU does not support such instructions. To mulitply, simply use *mul*
   instruction.
 
   #+BEGIN_SRC asm
@@ -187,7 +188,7 @@ ATI R700-Family Instruction Set Architecture]].
 - Z80 CPU has no *mul* intruction for multiplication. Programmers have to create
   a routine using simpler built-in instruction.
 
-- x86_64 and almost all modern CPU provide *mul* instruction. 
+- x86_64 and almost all modern CPU provide *mul* instruction.
 
 ** The need for an operating system
 - When resources in a computer system (CPU, GPU, memory, hard drive...) became
@@ -269,8 +270,10 @@ memory, well.
 - *Hardware datasheet*: hardrware documents - including CPU and other
   hardware devices - on various topics, i.e. the properties of such devices,
   programming interfaces...,
+
 - *Block diagram*: to understand how hardware devices communicate with each other
   and with the CPU.
+
 - *Timing diagram*: to achieve real-time, not only code needed to be correct, but
   also conforms to real-time constrainsts expressed through timing diagrams.
 ** Examples (Hardware Documents)
@@ -386,4 +389,3 @@ Start:
 times 510 - ($-$$) db 0				; We have to be 512 bytes. Clear the rest of the bytes with 0
  
 dw 0xAA55					; Boot Signiture
-* Using BIOS interrupt services
