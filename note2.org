@@ -35,3 +35,20 @@
 ** History
 - 16-bit CPU could address only 64 kB memory directly. Even at the time,
   programs need more than that.
+
+- To challenge competitors, who were making 16-bit processors at the time that
+  only access up to 64kB, Intel introduced this feature.
+
+- *segment:offset* memory scheme was born.
+** Segment
+- A segment is a section of memory.
+- Memory is divided into 64kB sections.
+- Each section has a base address, which is a location in memory that starts a
+  section. For example, section 1 starts at 0, section 2 starts at 65536...
+** Offset
+- An offset is a number that is added to base number to get the exact memory
+  address to be accessed.
+
+- For example, if the base address is 65536 and offset is 3, then the memory address
+  to be accessed is 65536 + 3 = 65539.
+** Segment:Offset addressing
