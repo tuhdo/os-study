@@ -109,13 +109,13 @@ _isr32:
   ret
 
 _isr33:
-  mov bl, 5
-  mov bh, 5
+  mov bl, 2
+  mov bh, 2
   ; mov eax, MovCur
   ; and eax, 0xFFFF
   call MovCur
 
-  mov eax, InterruptMsg
+  mov eax, KeyboardMsg
   ; and eax, 0xFFFF  ; retrieve offset only when base address is something different than 0
   ; call 0x38:0x1008a
   call Puts32

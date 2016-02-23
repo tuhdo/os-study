@@ -211,8 +211,9 @@ Returns page frame number of a page.
 ** PROGRESS Implement virtual to physical address translation
 ** TODO Activate paging in CR2 register
 * PROGRESS Keyboard Driver
-** Enable keyboard
-** Make the keyboard trigger IRQ 1 when pressing
+** DONE Make the keyboard trigger IRQ 1 when pressing
+CLOSED: [2016-02-23 Tue 17:12]
+** Proper keyboard initialization
 * Impediments
 ** DONE Investigate why interrupt handling only works when we first divide by 0
 CLOSED: [2015-11-09 Mon 12:12]
