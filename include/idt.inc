@@ -2,6 +2,7 @@ idt: times 256 dq 0.0 ; 256 entries
 
 DivByZeroMsg  db "Divide by Zero", 0ah, 0h
 InterruptMsg  db "Calling from interrupt", 0ah, 0h
+KeyboardMsg   db "Got a scancode from keyboard", 0ah, 0h
 PicIntrMsg    db "Receive timer interrupt from PIC!", 0ah, 0h
 UnhandledMsg  db "Unhandled interrupt: ",  0h
 IntNum        db "0", 0h
@@ -79,13 +80,13 @@ _isr0:
   ret
 
 _isr1:
-  mov bl, 5
-  mov bh, 5
+  mov bl, 2
+  mov bh, 2
   ; mov eax, MovCur
   ; and eax, 0xFFFF
   call MovCur
 
-  mov eax, InterruptMsg
+  mov eax, KeyboardMsg
   ; and eax, 0xFFFF  ; retrieve offset only when base address is something different than 0
   ; call 0x38:0x1008a
   call Puts32
