@@ -1,9 +1,10 @@
 %include "stdio32.inc"
+%include "a20.inc"
 
-%define MASK_KBD_ENC_INPUT_BUF 0x60  ; for reading
-%define MASK_KBD_ENC_CMD_REG 0x60    ; for writing
-%define MASK_KBD_CTRL_STATUS_REG 0x64  ; for reading
-%define MASK_KBD_CTRL_CMD_REG 0x64   ; for writing
+%define KBD_ENC_INPUT_BUF_REG 0x60  ; for reading
+%define KBD_ENC_CMD_REG 0x60    ; for writing
+%define KBD_CTRL_STATUS_REG 0x64  ; for reading
+%define KBD_CTRL_CMD_REG 0x64   ; for writing
 
 ;; Keyboard encoder commands
 %define CMD_KBD_ENC_SET_LEDS 0xED ; SET LEDs
@@ -24,6 +25,16 @@
 %define CMD_KBD_ENC_RESEND 0xED ; Resend last result
 %define CMD_KBD_ENC_RESET_AND_TEST 0xED ; Reset keyboard to power on state and start self test
 
+;; Status register breakdown
+%define MASK_KBD_CTRL_STATUS_REG_OUT_BUF 0x1
+%define MASK_KBD_CTRL_STATUS_REG_IN_BUF 0x2
+%define MASK_KBD_CTRL_STATUS_REG_SYSTEM 0x4
+%define MASK_KBD_CTRL_STATUS_REG_CMD_DATA 0x8
+%define MASK_KBD_CTRL_STATUS_REG_LOCKED 0x10
+%define MASK_KBD_CTRL_STATUS_REG_AUX_BUF 0x20
+%define MASK_KBD_CTRL_STATUS_REG_TIMEOUT 0x40
+%define MASK_KBD_CTRL_STATUS_REG_PARITY 2
+
 ;; keyboard controller commands
 %define CMD_KBD_CTRL_READ_COMMANd 0x20 ; Read command byte
 %define CMD_KBD_CTRL_WRITE_COMMAND 0x60 ; Write command byte
@@ -41,22 +52,18 @@
 %define CMD_KBD_CTRL_TEST_MOUSE_PORT 0xA9 ; Test Mouse Port
 %define CMD_KBD_CTRL_WRITE_TO_MOUSE 0xD4 ; Write To Mouse
 
-;; Status register breakdown
-%define MASK_KBD_CTRL_STATUS_REG_OUT_BUF 0x1
-%define MASK_KBD_CTRL_STATUS_REG_IN_BUF 0x2
-%define MASK_KBD_CTRL_STATUS_REG_SYSTEM 0x4
-%define MASK_KBD_CTRL_STATUS_REG_CMD_DATA 0x8
-%define MASK_KBD_CTRL_STATUS_REG_LOCKED 0x10
-%define MASK_KBD_CTRL_STATUS_REG_AUX_BUF 0x20
-%define MASK_KBD_CTRL_STATUS_REG_TIMEOUT 0x40
-%define MASK_KBD_CTRL_STATUS_REG_PARITY 2
-
 ;;
 ;; Read keyboard controller status
 read_status_kbd_ctrl:
   in al, MASK_KBD_CTRL_STATUS_REG
   ret
 
-;; Send a keyboard command stored in al
-send_kbd_cmd:
-  
+;; Read in stored in al
+read_kbd_enc_buffer:
+  in al, KBD_ENC_INPUT_BUF_REG
+  ret
+
+;; Run keyboard enconder command stored in al
+run_kbd_enc_cmd:
+  out al, KBD_ENC_CMD_REG
+  ret

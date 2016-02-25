@@ -211,9 +211,28 @@ Returns page frame number of a page.
 ** PROGRESS Implement virtual to physical address translation
 ** TODO Activate paging in CR2 register
 * PROGRESS Keyboard Driver
+** Proper keyboard initialization
+The keyboard interrupt is recieved via PIC.
+*** DONE Install ISR 33 for IRQ1 mapped from PIC
+CLOSED: [2016-02-25 Thu 13:56]
+*** Add self-test
+*** Add interface test
 ** DONE Make the keyboard trigger IRQ 1 when pressing
 CLOSED: [2016-02-23 Tue 17:12]
-** Proper keyboard initialization
+** TODO Create routines to check input/output buffers
+- To execute next command, input buffer must be checked to see if it is empty.
+  If it is not, the previous command is not yet executed and we have to wait or
+  do something else.
+
+- Similarly, we check output buffer to see if something is ready to be read. If
+  there's something to be read, it is the returned value from a finished command
+  or a scan code returned from keyboard encoder.
+** TODO Process *make code*
+- When a key is pressed, the scan code is sent to input buffer of the keyboard
+controller. Read from port *0x60* to retrieve the scan code.
+
+- Then print the character on screen.
+** TODO Process *break code*
 * Impediments
 ** DONE Investigate why interrupt handling only works when we first divide by 0
 CLOSED: [2015-11-09 Mon 12:12]

@@ -120,8 +120,22 @@ _isr33:
   ; call 0x38:0x1008a
   call Puts32
 
-  ; send EOI to primary PIC
+  mov bl, 3
+  mov bh, 3
+  ; mov eax, MovCur
+  ; and eax, 0xFFFF
+  call MovCur
 
+  xor eax, eax
+  in al, 0x60
+  ; call Putch32
+
+  cmp al, 0x9e
+  jne .eol
+  xchg bx, bx
+
+.eol:
+  ; send EOI to primary PIC
 	mov	al, 0x20	; set bit 4 of OCW 2
 	out	0x20, al	; write to primary PIC command register
   ret
